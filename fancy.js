@@ -9,6 +9,7 @@ var fifteenMetersNorth = 0.000173;
 var imageList = {
     pstreet: {
         view: {lat: 38.9088156, lng: -77.0650941},
+        pano: 'n8X1rxDB54gDaI2gvLh_4Q',
         marker: {lat: (38.9088156 + fifteenMetersNorth), lng: -77.0650941},
         pov: {
             heading: 350.67,
@@ -19,6 +20,7 @@ var imageList = {
 
     lenfentgal: {
         view: {lat: 38.9088428, lng: -77.0642795},
+        pano: '08wDGrIvJngagGOznNu_eQ',
         marker: {
             lat: 38.9088428,
             lng: -77.0642795 + 2 * fifteenMetersNorth
@@ -32,6 +34,7 @@ var imageList = {
 
     rowhouses: {
         view: {lat: 38.9192317, lng: -77.076048},
+        pano: 'xu6PnLqRKVv4YjN334b7FA',
         marker: {
             lat: 38.9192317 - 2 * fifteenMetersNorth,
             lng: -77.076048 - 2 * fifteenMetersNorth
@@ -45,6 +48,7 @@ var imageList = {
 
     qstreetbridge: {
         view: {lat: 38.9110745,lng: -77.0506875},
+        pano: 'V_Q7QSL-k5R167o3_YnprA',
         marker: {
             lat: 38.9110745 - fifteenMetersNorth,
             lng: -77.0506875 - fifteenMetersNorth
@@ -72,8 +76,8 @@ function initialize() {
     var panorama = new google.maps.StreetViewPanorama(
         document.getElementById('pano'), {
         position: greyhouse_view,
-        pov: thisImage.pov,
-        imageDateControl: true
+        //pano: thisImage.pano,
+        pov: thisImage.pov
     });
     map.setStreetView(panorama);
     panorama.controls[google.maps.ControlPosition.TOP_LEFT].push(
