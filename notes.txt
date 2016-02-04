@@ -1,0 +1,11 @@
+Trying to get the panorama with the right date
+I think the best we can do might be to ask for "CLOSEST" panorama rather than "BEST" - https://developers.google.com/maps/documentation/javascript/reference#StreetViewPreference
+
+I think you have to do slightly lower level js to use that, 
+
+Oh no, there are ways to specify the exact pano id... have to find it in the url?
+YES!
+
+https://www.google.com/maps/@38.9803796,-77.0291561,3a,75y,140.86h,83.94t/data=!3m7!1e1!3m5!1sCElgvzaE8lod5sDDGrwMLw!2e0!5s20090701T000000!7i13312!8i6656
+
+The pano ID is CElgvzaE8lod5sDDGrwMLw - it's prefixed "1s" for some reason.

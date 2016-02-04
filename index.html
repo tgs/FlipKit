@@ -32,21 +32,37 @@
         height: 100%;
         width: 8%;
       }
+      #flip-button {
+        margin: 10px;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius:6px;
+        color: #fff;
+        border: 1px solid transparent;
+        font-size: 200%;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      #flip-button:active {
+        color: #fff;
+        background-color: #449d44;
+        border-color: #255625;
+      }
     </style>
   </head>
   <body>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-5" id="map"></div>
-      <div id="pano"></div>
-      <div id="links"></div>
+    <div id="map"></div>
+    <div id="pano">
+      <button id="flip-button">Flip!</button>
     </div>
-  </div>
-  <script src="fancy.js"></script>
-  <script src="js/jquery-1.12.0.min.js"></script>
-  <script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&signed_in=true&callback=initialize">
-  </script>
-  <!-- could include bootstrap js at this point, if needed -->
+    <div id="links"></div>
+    <script src="fancy.js"></script>
+    <script src="js/jquery-1.12.0.min.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&signed_in=true&callback=initialize">
+    </script>
+    <!-- could include jquery and bootstrap js at this point, if needed -->
   </body>
-  </html>
+</html>

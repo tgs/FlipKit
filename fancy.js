@@ -72,9 +72,13 @@ function initialize() {
     var panorama = new google.maps.StreetViewPanorama(
         document.getElementById('pano'), {
         position: greyhouse_view,
-        pov: thisImage.pov
+        pov: thisImage.pov,
+        imageDateControl: true
     });
     map.setStreetView(panorama);
+    panorama.controls[google.maps.ControlPosition.TOP_LEFT].push(
+        document.getElementById('flip-button'));
+    // panorama.setPano('CElgvzaE8lod5sDDGrwMLw');
 
 
     var houseMarker = new google.maps.Marker({
@@ -93,6 +97,14 @@ function initialize() {
         links.appendChild(anchor);
         links.appendChild(document.createElement('br'));
     }
+
+    $("#flip-button").click(function() {
+        if (houseMarker.getMap() !== null) {
+            houseMarker.setMap(null);
+        } else {
+            houseMarker.setMap(panorama);
+        }
+    })
 
 
     function StreetImageOverlay(bounds, image, map) {
