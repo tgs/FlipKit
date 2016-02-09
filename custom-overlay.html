@@ -33,15 +33,22 @@ USGSOverlay.prototype = new google.maps.OverlayView();
 // Initialize the map and the custom overlay.
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 11,
-    center: {lat: 62.323907, lng: -150.109291},
-    mapTypeId: google.maps.MapTypeId.SATELLITE
+  var map = new google.maps.StreetViewPanorama(
+      document.getElementById('map'),
+      {
+        position: {lat: 37.869260, lng: -122.254811},
+        pov: {heading: 165, pitch: 0},
+        zoom: 1
   });
+  //var map = new google.maps.Map(document.getElementById('map'), {
+    //zoom: 11,
+    //center: {lat: 62.323907, lng: -150.109291},
+    //mapTypeId: google.maps.MapTypeId.SATELLITE
+  //});
 
   var bounds = new google.maps.LatLngBounds(
-      new google.maps.LatLng(62.281819, -150.287132),
-      new google.maps.LatLng(62.400471, -150.005608));
+      new google.maps.LatLng(37.769260, -122.354811),
+      new google.maps.LatLng(37.969260, -122.154811));
 
   // The photograph is courtesy of the U.S. Geological Survey.
   var srcImage = 'https://developers.google.com/maps/documentation/' +
@@ -116,10 +123,14 @@ USGSOverlay.prototype.draw = function() {
 
   // Resize the image's div to fit the indicated dimensions.
   var div = this.div_;
-  div.style.left = sw.x + 'px';
-  div.style.top = ne.y + 'px';
-  div.style.width = (ne.x - sw.x) + 'px';
-  div.style.height = (sw.y - ne.y) + 'px';
+  div.style.left = '50px';
+  div.style.top = '50px';
+  div.style.width = '50px';
+  div.style.height = '50px';
+  // div.style.left = sw.x + 'px';
+  // div.style.top = ne.y + 'px';
+  // div.style.width = (ne.x - sw.x) + 'px';
+  // div.style.height = (sw.y - ne.y) + 'px';
 };
 // [END region_drawing]
 
