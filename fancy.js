@@ -19,11 +19,11 @@ var imageList = {
     },
 
     lenfentgal: {
-        view: {lat: 38.9092122, lng: -77.0642427},
-        pano: 'l_4KBET38DJSsfI7QVb5nw',
+        view: {lat: 38.9092196, lng: -77.0641327},
+        pano: '5C3GEFRSXQikzO6yfk8zcg',
         marker: {
-            lat: 38.9092122 + 0.3 * fifteenMetersNorth,
-            lng: -77.0642427 - 0.7 * fifteenMetersNorth
+            lat: 38.9092122 + 0.6 * fifteenMetersNorth,
+            lng: -77.0642427 - 1.1 * fifteenMetersNorth
         },
         pov: {
             heading: 295.37,
