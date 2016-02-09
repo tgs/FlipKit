@@ -10,7 +10,7 @@ var imageList = {
     pstreet: {
         view: {lat: 38.9088156, lng: -77.0650941},
         pano: 'n8X1rxDB54gDaI2gvLh_4Q',
-        marker: {lat: (38.9088156 + fifteenMetersNorth), lng: -77.0650941},
+        marker: {lat: (38.9088156 + (0.4 * fifteenMetersNorth)), lng: -77.0650941},
         pov: {
             heading: 350.67,
             pitch: -1
@@ -82,7 +82,7 @@ function initialize() {
     map.setStreetView(panorama);
     panorama.controls[google.maps.ControlPosition.TOP_LEFT].push(
         document.getElementById('flip-button'));
-    // panorama.setPano('CElgvzaE8lod5sDDGrwMLw');
+    panorama.setPano(thisImage.pano);
 
 
     var houseMarker = new google.maps.Marker({
