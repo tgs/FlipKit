@@ -36,8 +36,8 @@ var imageList = {
         view: {lat: 38.9192317, lng: -77.076048},
         pano: 'xu6PnLqRKVv4YjN334b7FA',
         marker: {
-            lat: 38.9192317 - 2 * fifteenMetersNorth,
-            lng: -77.076048 - 2 * fifteenMetersNorth
+            lat: 38.9192317 - 0.5 * fifteenMetersNorth,
+            lng: -77.076048 - 0.5 * fifteenMetersNorth
         },
         pov: {
             heading: 227.54,
@@ -50,8 +50,8 @@ var imageList = {
         view: {lat: 38.9110745,lng: -77.0506875},
         pano: 'V_Q7QSL-k5R167o3_YnprA',
         marker: {
-            lat: 38.9110745 - fifteenMetersNorth,
-            lng: -77.0506875 - fifteenMetersNorth
+            lat: 38.9110745 - 0.9 * fifteenMetersNorth,
+            lng: -77.0506875 - 0.9 * fifteenMetersNorth
         },
         pov: {
             heading: 227,
