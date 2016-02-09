@@ -19,15 +19,15 @@ var imageList = {
     },
 
     lenfentgal: {
-        view: {lat: 38.9088428, lng: -77.0642795},
-        pano: '08wDGrIvJngagGOznNu_eQ',
+        view: {lat: 38.9092122, lng: -77.0642427},
+        pano: 'l_4KBET38DJSsfI7QVb5nw',
         marker: {
-            lat: 38.9088428,
-            lng: -77.0642795 + 2 * fifteenMetersNorth
+            lat: 38.9092122 + 0.3 * fifteenMetersNorth,
+            lng: -77.0642427 - 0.7 * fifteenMetersNorth
         },
         pov: {
-            heading: 112.7,
-            pitch: 1
+            heading: 295.37,
+            pitch: -2
         },
         file: 'WY 277742-1.JPG'
     },
