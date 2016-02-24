@@ -13,10 +13,11 @@ tab = (tablib.Dataset()
        .load(open(sys.argv[1]).read().strip()))
 
 parsed_urls = []
-for row in tab.dict:
+for rnum, row in enumerate(tab.dict):  # py2 not lazy
     try:
         if 'historydc' in row['MAPS_URL']:
-            parsed_urls.append({})
+            print "Skipping", row['OBJECTID'], "since it has historydc in google maps url"
+            del tab[rnum]
         else:
             parsed_urls.append(whole_url.parse_string(row['MAPS_URL']))
     except:
