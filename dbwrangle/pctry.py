@@ -22,7 +22,7 @@ location_part = (latlng + ',' + mini_datas)[cat_dicts]
 
 bang_silly = p.OneOrMore(
     ('!' + p.Digit() + p.Alpha())[p.concat]
-    + p.OneOrMore(p.CharIn(p.alphanum_chars + '_'))[p.concat])[dict]
+    + p.OneOrMore(p.CharIn(p.alphanum_chars + '-_'))[p.concat])[dict]
 
 
 whole_url = (~dontcare_prefix + location_part + '/data=' + bang_silly

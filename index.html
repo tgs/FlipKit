@@ -25,43 +25,64 @@
       #map, #pano {
         float: left;
         height: 100%;
-        width: 45%;
+        width: 50%;
+        border: thick solid white;
       }
-      #links {
-        float: left;
-        height: 100%;
-        width: 8%;
-      }
-      #flip-button {
-        margin: 10px;
-        background-color: #5cb85c;
-        border-color: #4cae4c;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius:6px;
-        color: #fff;
-        border: 1px solid transparent;
-        font-size: 200%;
-        text-decoration: none;
+      div#flip-button {
+        border: thin solid white;
         cursor: pointer;
-      }
-      #flip-button:active {
+        padding-top: 6px;
+        padding-bottom: 6px;
+        height: 49px;
         color: #fff;
-        background-color: #449d44;
-        border-color: #255625;
+        line-height: 20px;
+        font-size: 120%;
+        background-color: #222;
+        opacity: 0.8;
+        border-radius: 2px;
+      }
+      div#flip-button:hover {
+        text-decoration: underline;
+      }
+      div.wymercontrol {
+        margin: 10px;
+        padding-left: 1em;
+        padding-right: 1em;
+        font-family: 'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;
+        display: inline-block;
+        font-size: 120%;
+        text-align: center;
+      }
+      #wymerlink{
+        background-color: white;
+        line-height: 35px;
+        color: #5c5c5c;
+        border: solid thin black;
+       width: 15em;
+        height: 35px;
+      }
+      #wymerlink img {
+        height: 35px;
+      }
+      .flip {
+        font-weight: bold;
+        font-size: 140%;
       }
     </style>
   </head>
   <body>
-    <div id="map"></div>
-    <div id="pano">
-      <button id="flip-button">Flip!</button>
+    <div class="wymercontrol" id="wymerlink" style="position: absolute; right: -100000px;">
+      <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
     </div>
-    <div id="links"></div>
+    <div id="map">
+    </div>
+    <div id="pano">
+      <div class="wymercontrol" id="flip-button"><span class="flip">Flip</span><br>between Historic and Modern Views</div>
+    </div>
     <script src="fancy.js"></script>
     <script src="js/jquery-1.12.0.min.js"></script>
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&signed_in=true&callback=initialize">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&signed_in=true&callback=initialize&libraries=geometry">
     </script>
     <!-- could include jquery and bootstrap js at this point, if needed -->
   </body>
