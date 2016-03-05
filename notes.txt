@@ -13,3 +13,16 @@ The pano ID is CElgvzaE8lod5sDDGrwMLw - it's prefixed "1s" for some reason.
 AAwwwwww. The marker doesn't show up when you specify the panorama ID.  WTF.
 
 OK, it works if you set the position FIRST and then add the Marker and then set the Pano ID.  Fine, be that way.
+
+
+
+Search:
+Whoosh in Python
+AWS lambda: make a zip file of my module structure and virtualenv/lib/python2.7/site-packages.
+Wymer URL database search terms: DESCRIP minus "John P. Wymer's description" and the sentence about the page?  Oh, but it's saying stuff about all of the photos on the page, so maybe just TITLE?
+OBJECTID: just first 4 digits?  make searchable with or without space
+
+Need to think about synonyms - J will make "places of worship" category, including "priories", "churches", synagogues, monasteries, etc...  (maybe notice terms that are important in a category, and suggest other ones?)
+
+1st vs first, etc, I vs Eye, make sure I isn't a stopword in the input
+

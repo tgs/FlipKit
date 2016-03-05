@@ -46,6 +46,8 @@ function initialize() {
         //pano: thisImage.pano,
         pov: { heading: 350.67, pitch: -1 }
     });
+    var svService = new google.maps.StreetViewService();
+
     map.setStreetView(panorama);
     panorama.controls[google.maps.ControlPosition.TOP_LEFT].push(
         document.getElementById('flip-button'));
@@ -65,22 +67,51 @@ function initialize() {
         var marker = new google.maps.Marker({
             position: pos,
             map: map,
-            title: 'asdf'
+            title: image.TITLE
         });
         marker.addListener('click', function() {
             var finicky = new google.maps.LatLng(image.lat, image.lng);
             var newPos = google.maps.geometry.spherical.computeOffset(
-                    finicky, 40, image.heading)
-            houseMarker.setPosition(newPos);
-            houseMarker.setIcon(image.image_url);
-            houseMarker.setMap(panorama);
-            panorama.setPosition(pos);
-            panorama.setPano(image.pano);
-            panorama.setPov({heading: image.heading, pitch: image.pitch_from_down - 90});
+                    finicky, 40, image.heading);
+            var giveUpNextTime = false;
+
+            var gotPanoramaCallback = function(data, status) {
+                if (status === google.maps.StreetViewStatus.OK) {
+                    //panorama.setVisible(false);
+                    houseMarker.setPosition(newPos);
+                    houseMarker.setIcon(image.image_url);
+                    houseMarker.setMap(panorama);
+
+                    //panorama.setLocation(data.location);
+                    panorama.setOptions({
+                        pano: data.location.pano,
+                        pov: {heading: image.heading, pitch: image.pitch_from_down - 90}
+                    });
+                    //panorama.setPano(data.location.pano);
+                    //panorama.setPov({heading: image.heading, pitch: image.pitch_from_down - 90});
+                    //panorama.setVisible(true);
+                    console.log("Got panorama " + (giveUpNextTime ? "by location" : "by id"));
+                } else {
+                    console.log("Failed a try to get pano data");
+                    if (giveUpNextTime) {
+                        console.error('Street View data not found for this location.');
+                    } else {
+                        giveUpNextTime = true;
+                        svService.getPanorama({
+                            location: pos,
+                            radius: 20,
+                            preference: google.maps.StreetViewPreference.NEAREST},
+                            gotPanoramaCallback);
+                    }
+                }
+            };
+
+            svService.getPanorama({pano: image.pano}, gotPanoramaCallback);
 
         });
         if (startMarker === i) {
             google.maps.event.trigger(marker, "click");
+            map.setCenter(pos);
         }
     });
 
@@ -99,7 +130,8 @@ function initialize() {
         } else {
             houseMarker.setMap(panorama);
         }
-    })
+    });
+
 }
 
 
