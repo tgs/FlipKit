@@ -14,11 +14,7 @@ function SVO()
     this.image = "collection/800/WY%200003.jpg";
 
     this.streetPt = new google.maps.LatLng(this.slat, this.slng);
-    this.pt = google.maps.geometry.spherical.computeOffset(
-        this.streetPt, 40, this.sheading);
-
-    this.lat = this.pt.lat();
-    this.lng = this.pt.lng();
+    this.m_setImagePoint();
     this.zoom = 16;
 
     this.distance = 0;  // distance in metres from street view to marker
@@ -29,10 +25,19 @@ function SVO()
     //this.panHeight = 480;
 
     // dimensions of marker container (resized according to current pov)
-    this.markerWidth = 360;
-    this.markerHeight = 240;
+    this.initMarkerWidth = 360;
+    this.initMarkerHeight = 240;
 }
 
+
+SVO.prototype.m_setImagePoint = function()
+{
+    this.pt = google.maps.geometry.spherical.computeOffset(
+        this.streetPt, 40, this.sheading);
+
+    this.lat = this.pt.lat();
+    this.lng = this.pt.lng();
+}
 
 // create map
 SVO.prototype.m_initMap = function ()
@@ -48,7 +53,7 @@ SVO.prototype.m_initMap = function ()
         mapTypeControl: false
     };
 
-    map = new google.maps.Map(mapDiv, mapOptions);
+    this.map = new google.maps.Map(mapDiv, mapOptions);
 }
 
 
@@ -63,6 +68,7 @@ SVO.prototype.m_initPanorama = function ()
     {
         // zoomControl: false,
         // linksControl: false
+        addressControl: true,
     };
 
     l_panOptions.position = this.streetPt;
@@ -75,7 +81,7 @@ SVO.prototype.m_initPanorama = function ()
 
     pan = new google.maps.StreetViewPanorama(l_panDiv, l_panOptions);
 
-    map.setStreetView(pan);
+    this.map.setStreetView(pan);
 
     // event handlers    
     // TODO: add resize listener
@@ -92,11 +98,11 @@ SVO.prototype.m_initPanorama = function ()
     google.maps.event.addListener(pan, 'position_changed', function ()
     {
         svo.streetPt = pan.getPosition();
-        map.setCenter(svo.streetPt);
+        svo.map.setCenter(svo.streetPt);
 
         svo.m_updateMarker();
     });
-
+    this.pan = pan;
 }
 
 
@@ -128,6 +134,7 @@ SVO.prototype.m_convertPointProjection = function (p_pov, p_zoom)
     l_diffHeading = normalizeAngle(l_diffHeading);
     l_diffHeading /= l_fovAngleHorizontal;
 
+    // TODO: reduce pitch proportionally with distance
     var l_diffPitch = (p_pov.pitch - this.spitch) / l_fovAngleVertical;
 
     var x = l_midX + l_diffHeading * panWidth;
@@ -142,13 +149,24 @@ SVO.prototype.m_convertPointProjection = function (p_pov, p_zoom)
 SVO.prototype.m_initMarker = function ()
 {
     var l_markerDiv = eid("marker");
-    l_markerDiv.style.width = this.markerWidth + "px";
-    l_markerDiv.style.height = this.markerHeight + "px";
+    l_markerDiv.style.width = this.initMarkerWidth + "px";
+    l_markerDiv.style.height = this.initMarkerHeight + "px";
 
-    var l_iconDiv = eid("marker");
-    l_iconDiv.innerHTML = "<img src='" + this.image + "' width='100%' height='100%' alt='' />";
+    this.m_setImage(this.image);
 
     this.m_updateMarker();
+}
+
+SVO.prototype.m_setImage = function(image)
+{
+    this.image = image;
+    var l_iconDiv = eid("marker");
+    l_iconDiv.innerHTML = "<img src='" + this.image + "' width='100%' height='100%' alt='' />";
+}
+
+SVO.prototype.m_toggleVisible = function(visible)
+{
+    $('#marker').toggle(visible);
 }
 
 SVO.prototype.m_updateMarker = function ()
@@ -166,7 +184,15 @@ SVO.prototype.m_updateMarker = function ()
         this.sheading = google.maps.geometry.spherical.computeHeading(this.streetPt, this.pt)
         this.distance = google.maps.geometry.spherical.computeDistanceBetween(this.streetPt, this.pt);
 
+        // TODO: what do I do about images with very different aspect ratios?
         var l_pixelPoint = this.m_convertPointProjection(l_pov, l_adjustedZoom);
+        var imageArcGuess = 35 / 2;
+        var edgePixelPoint = this.m_convertPointProjection(
+            {zoom: l_pov.zoom, heading: l_pov.heading - imageArcGuess, pitch: l_pov.pitch},
+            l_adjustedZoom);
+        // Hope it handles wraparound nicely!
+        var markerWidth = 2 * (edgePixelPoint.x - l_pixelPoint.x),
+            markerHeight = 0.75 * markerWidth;
 
         var l_markerDiv = eid("marker");
 
@@ -178,8 +204,8 @@ SVO.prototype.m_updateMarker = function ()
         // beyond maximum range a marker will not be visible
 
         // apply position and size to the marker div
-        var wd = this.markerWidth * l_adjustedZoom;
-        var ht = this.markerHeight * l_adjustedZoom;
+        var wd = markerWidth * l_adjustedZoom;
+        var ht = markerHeight * l_adjustedZoom;
 
         var x = l_pixelPoint.x - Math.floor(wd / 2);
         var y = l_pixelPoint.y - Math.floor(ht / 2);
@@ -272,29 +298,15 @@ var justone = [{
 
 function initialize() {
     loadPage();
-/*
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 38.9418698, lng: -77.0279026},
-        zoom: 14
-    });
-    var panorama = new google.maps.StreetViewPanorama(
-        document.getElementById('pano'), {
-        position: {lat: 38.9418698, lng: -77.0279026},
-        pov: { heading: 350.67, pitch: -1 }
-    });
+
     var svService = new google.maps.StreetViewService();
 
-    map.setStreetView(panorama);
-    panorama.controls[google.maps.ControlPosition.TOP_LEFT].push(
+    svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
         document.getElementById('flip-button'));
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+    svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
         document.getElementById('wymerlink'));
-
-    var houseMarker = new google.maps.Marker({
-        position: {lat: 38.9418698, lng: -77.0279026},
-        map: panorama,
-        title: 'Wymer image'
-    });
+    svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
+        document.getElementById('wymercopyright'));
 
     var startMarker = Math.floor(Math.random() * imageList.length);
 
@@ -302,30 +314,28 @@ function initialize() {
         var pos = {lat: image.lat, lng: image.lng};
         var marker = new google.maps.Marker({
             position: pos,
-            map: map,
+            map: svo.map,
             title: image.TITLE
         });
         marker.addListener('click', function() {
-            var finicky = new google.maps.LatLng(image.lat, image.lng);
-            var newPos = google.maps.geometry.spherical.computeOffset(
-                    finicky, 40, image.heading);
             var giveUpNextTime = false;
 
             var gotPanoramaCallback = function(data, status) {
                 if (status === google.maps.StreetViewStatus.OK) {
-                    //panorama.setVisible(false);
-                    houseMarker.setPosition(newPos);
-                    houseMarker.setIcon(image.image_url);
-                    houseMarker.setMap(panorama);
+                    svo.streetPt = new google.maps.LatLng(image.lat, image.lng);
+                    svo.sheading = image.heading;
+                    // Technically 90 but empirically 80 works better with
+                    // Jessie's data collection
+                    svo.spitch = image.pitch_from_down - 80;
+                    svo.m_setImagePoint()
+                    svo.m_setImage(image.image_url);
 
-                    //panorama.setLocation(data.location);
-                    panorama.setOptions({
+                    svo.pan.setOptions({
+                        position: pos,
                         pano: data.location.pano,
                         pov: {heading: image.heading, pitch: image.pitch_from_down - 90}
                     });
-                    //panorama.setPano(data.location.pano);
-                    //panorama.setPov({heading: image.heading, pitch: image.pitch_from_down - 90});
-                    //panorama.setVisible(true);
+                    svo.m_toggleVisible(true);
                     console.log("Got panorama " + (giveUpNextTime ? "by location" : "by id"));
                 } else {
                     console.log("Failed a try to get pano data");
@@ -347,7 +357,7 @@ function initialize() {
         });
         if (startMarker === i) {
             google.maps.event.trigger(marker, "click");
-            map.setCenter(pos);
+            //map.setCenter(pos);
         }
     });
 
@@ -361,13 +371,8 @@ function initialize() {
 
 
     $("#flip-button").click(function() {
-        if (houseMarker.getMap() !== null) {
-            houseMarker.setMap(null);
-        } else {
-            houseMarker.setMap(panorama);
-        }
+        svo.m_toggleVisible();
     });
-*/
 
 }
 

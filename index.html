@@ -41,6 +41,18 @@
         opacity: 0.8;
         border-radius: 2px;
       }
+      div#wymercopyright {
+        border: thin solid black;
+        color: #fff;
+        font-size: 80%;
+        background-color: #222;
+        opacity: 0.8;
+        padding: 0px;
+      }
+      div#wymercopyright a:link { color: #fff; }
+      div#wymercopyright a:visited { color: #fff; }
+      div#wymercopyright a:hover { color: #fff; }
+
       div#flip-button:hover {
         text-decoration: underline;
       }
@@ -81,7 +93,11 @@
     </div>
     <div id="pano">
       <div class="wymercontrol" id="flip-button"><span class="flip">Flip</span><br>between Historic and Modern Views</div>
-    <div id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
+      <div id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
+      <div id="wymercopyright">
+        <a href="http://www.dchistory.org/">Historical Images courtesy HSW</a> |
+        Thanks <a href="http://teammaps.com/">Team Maps</a>
+      </div>
     </div>
     <div id="markerInfo"></div>
     <script src="fancy.js"></script>

@@ -1,7 +1,10 @@
 all: locations.json
 
 
-locations.json: urls.csv make-json-url-db.py pctry.py
+locations.json: locations.json.tmp
+	json_pp < "$<" > $@
+
+locations.json.tmp: urls.csv make-json-url-db.py pctry.py
 	./make-json-url-db.py "$<" $@
 
 
