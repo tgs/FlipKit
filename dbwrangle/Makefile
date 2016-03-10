@@ -8,7 +8,7 @@ locations.json.tmp: urls.csv make-json-url-db.py pctry.py
 	./make-json-url-db.py "$<" $@
 
 
-urls-tmp.csv: url-db-current.csv
+urls-tmp.csv: current.csv
 	csvcut -C 'MAPS URL' "$<" > $@
 
 

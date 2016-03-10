@@ -16,7 +16,7 @@ tab = (tablib.Dataset()
 
 # TABLIB ACTUALLY SUCKS.
 images = []
-for rnum, row in enumerate(tab.dict):
+for rnum, row in reversed(list(enumerate(tab.dict))):
     accession = row['OBJECTID']
     if '.' in accession:
         accession = accession.rsplit('.')[0]
@@ -25,17 +25,19 @@ for rnum, row in enumerate(tab.dict):
                             accession + '*.jpg')
     matches = glob.glob(try_path)
     if matches:
-        assert len(matches) == 1, matches
-        images.append(os.path.relpath(matches[0], start='..'))
+        matches = sorted(matches, key=len)
+        if len(matches) > 1:
+            print "Several matches, choosing last:", matches
+        images.append(os.path.relpath(matches[-1], start='..'))
     else:
         print "Couldn't find image for", row['OBJECTID']
         del tab[rnum]
 
-tab.append_col(images, header="image_url")
+tab.append_col(reversed(images), header="image_url")
 
 
 parsed_urls = []
-for rnum, row in enumerate(tab.dict):  # py2 not lazy
+for rnum, row in reversed(list(enumerate(tab.dict))):  # py2 not lazy
     try:
         if 'historydc' in row['MAPS_URL']:
             print "Skipping", row['OBJECTID'], "since it has historydc in google maps url"
@@ -45,6 +47,7 @@ for rnum, row in enumerate(tab.dict):  # py2 not lazy
     except:
         print "Couldn't parse", row['MAPS_URL'], "on", row['OBJECTID']
         raise
+parsed_urls = list(reversed(parsed_urls))
 
 sillyname_nicename = {
     '1s': 'pano',

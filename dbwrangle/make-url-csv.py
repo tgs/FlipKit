@@ -11,7 +11,7 @@ def find(lst):
 
 tab = (tablib.Dataset()
        .load(open(sys.argv[1]).read())
-       .subset(cols=['OBJECTID', 'TITLE', 'MAPS URL', 'Notes']))
+       .subset(cols=['OBJECTID', 'TITLE', 'MAPS URL', 'Notes', 'CAT Record URL']))
 tab.headers[2] = 'MAPS_URL'
 tab = tab.subset(rows=find(tab['MAPS_URL']))
 
