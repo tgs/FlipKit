@@ -332,10 +332,22 @@ function initialize() {
                     svo.m_setImagePoint()
                     svo.m_setImage(image.image_url, image['CAT Record URL']);
 
-                    svo.pan.setOptions({
+                    var options = {
                         pano: data.location.pano,
                         pov: {heading: image.heading, pitch: image.pitch_from_down - 90}
-                    });
+                    };
+
+                    // Changing the location and POV at the same time causes horrible
+                    // display problems!
+                    svo.pan.setPano(options.pano);
+                    svo.pan.changed = function(key) {
+                        //console.log(key + ':' + svo.pan[key]);
+                        if (key === 'status') {
+                            // Just listen once!
+                            svo.pan.changed = function() {};
+                            svo.pan.setPov(options.pov);
+                        }
+                    };
                     svo.m_toggleVisible(true);
                 } else {
                     console.log("Failed a try to get pano data");
