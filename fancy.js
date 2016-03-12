@@ -1,6 +1,13 @@
 var svo = null;
+var markerIndex = {};
 
 // the main application object
+// SVO (Street View Overlay) modified from Team Maps example,
+// http://projects.teammaps.com/projects/streetviewoverlay/streetviewoverlay.htm
+// Team Maps, July 2013
+// Team Maps Projects
+// Coding by Robert McMahon. Thanks to Keir Clarke for assistance during development.
+// Licensed under the Apache License http://www.apache.org/licenses/LICENSE-2.0
 function SVO()
 {
     this.slat = 38.9897227;
@@ -296,6 +303,11 @@ var justone = [{
 }]
 
 
+function imageID(image) {
+    return image.OBJECTID.slice(0,2) + image.OBJECTID.slice(3, 7);
+}
+
+
 function initialize() {
     loadPage();
 
@@ -308,7 +320,12 @@ function initialize() {
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
 
-    var startMarker = Math.floor(Math.random() * imageList.length);
+    if (location.hash) {
+        var startMarker = location.hash.slice(1);
+    } else {
+        var startMarker = imageID(
+            imageList[Math.floor(Math.random() * imageList.length)]);
+    }
 
     $.each(imageList, function(i, image) {
         var pos = {lat: image.lat, lng: image.lng};
@@ -317,6 +334,8 @@ function initialize() {
             map: svo.map,
             title: image.TITLE
         });
+        markerIndex[imageID(image)] = marker;
+
         marker.addListener('click', function() {
             var giveUpNextTime = false;
 
@@ -324,6 +343,7 @@ function initialize() {
                 if (status === google.maps.StreetViewStatus.OK) {
                     console.log("Got panorama " + 
                                 (giveUpNextTime ? "by location" : "by id"));
+                    location.hash = imageID(image);
                     svo.streetPt = new google.maps.LatLng(image.lat, image.lng);
                     svo.sheading = image.heading;
                     // Technically 90 but empirically 80 works better with
@@ -367,20 +387,12 @@ function initialize() {
             svService.getPanorama({pano: image.pano}, gotPanoramaCallback);
 
         });
-        if (startMarker === i) {
-            google.maps.event.trigger(marker, "click");
-            //map.setCenter(pos);
-        }
     });
-
-    // choose an image and flip to it: var rand = myArray[Math.floor(Math.random() * myArray.length)];
-    //
-    // Also draggability on the image
-    // and put all the close images in the panorama view
-    //
-    // Add border between img and map
-    // Grow img, map to take whole screen
-
+    var initMarker = markerIndex[startMarker];
+    if (initMarker !== undefined) {
+        google.maps.event.trigger(initMarker, "click");
+        //map.setCenter(pos);
+    }
 
     $("#flip-button").click(function() {
         svo.m_toggleVisible();
