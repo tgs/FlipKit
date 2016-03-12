@@ -322,6 +322,8 @@ function initialize() {
 
             var gotPanoramaCallback = function(data, status) {
                 if (status === google.maps.StreetViewStatus.OK) {
+                    console.log("Got panorama " + 
+                                (giveUpNextTime ? "by location" : "by id"));
                     svo.streetPt = new google.maps.LatLng(image.lat, image.lng);
                     svo.sheading = image.heading;
                     // Technically 90 but empirically 80 works better with
@@ -331,12 +333,10 @@ function initialize() {
                     svo.m_setImage(image.image_url, image['CAT Record URL']);
 
                     svo.pan.setOptions({
-                        position: pos,
                         pano: data.location.pano,
                         pov: {heading: image.heading, pitch: image.pitch_from_down - 90}
                     });
                     svo.m_toggleVisible(true);
-                    console.log("Got panorama " + (giveUpNextTime ? "by location" : "by id"));
                 } else {
                     console.log("Failed a try to get pano data");
                     if (giveUpNextTime) {
