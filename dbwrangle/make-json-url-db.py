@@ -63,5 +63,7 @@ for silly, nice in sillyname_nicename.items():
     tab.append_col([parse.get(silly, '') if parse else ''
                     for parse in parsed_urls], header=nice)
 
+print set(tab['Tag_1']).union(set(tab['Tag_2']))
+
 with open(sys.argv[2], 'w') as out:
     print >>out, tab.json
