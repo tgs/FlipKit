@@ -405,6 +405,18 @@ function initialize() {
 }
 
 
+function updateFilteredMarkers(enabledCategories) {
+    $.each(imageList, function(i, image) {
+        var imgid = imageID(image);
+        if ((image['Tag_1'] in enabledCategories) ||
+            (image['Tag_2'] in enabledCategories)) {
+            markerIndex[imgid].setMap(svo.map);
+        } else {
+            markerIndex[imgid].setMap(null);
+        }
+    });
+}
+
 
 var imageList = [
    {
