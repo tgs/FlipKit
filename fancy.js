@@ -2,6 +2,7 @@ var svo = null;
 var markerIndex = {};
 
 // the main application object
+// Many thanks to Team Maps.
 // SVO (Street View Overlay) modified from Team Maps example,
 // http://projects.teammaps.com/projects/streetviewoverlay/streetviewoverlay.htm
 // Team Maps, July 2013
@@ -18,13 +19,18 @@ function SVO()
     this.spitch = -2;
     this.szoom = 1;
 
+    // The image is placed at a point in space, which is this many meters
+    // away from the *initial* street point, in the 'sheading' direction.
+    this.imageDistance = 40;
     this.image = "collection/800/WY%200003.jpg";
 
     this.streetPt = new google.maps.LatLng(this.slat, this.slng);
-    this.m_setImagePoint();
+    this.m_calcImagePoint();
     this.zoom = 13;
 
-    this.distance = 0;  // distance in metres from street view to marker
+    // distance in metres from street view to marker - this is recalculated when
+    // the user moves around.
+    this.distance = 0;
     this.maximumDistance = 200;     // distance beyond which marker is hidden
 
     // dimensions of street view container (fixed)
@@ -37,10 +43,10 @@ function SVO()
 }
 
 
-SVO.prototype.m_setImagePoint = function()
+SVO.prototype.m_calcImagePoint = function()
 {
     this.pt = google.maps.geometry.spherical.computeOffset(
-        this.streetPt, 40, this.sheading);
+        this.streetPt, this.imageDistance, this.sheading);
 
     this.lat = this.pt.lat();
     this.lng = this.pt.lng();
@@ -78,13 +84,13 @@ SVO.prototype.m_initPanorama = function ()
         addressControl: true,
     };
 
-    l_panOptions.position = this.streetPt;
-    l_panOptions.pov =
-    {
-        heading: this.sheading,
-        pitch: this.spitch,
-        zoom: this.szoom
-    };
+    //l_panOptions.position = this.streetPt;
+    //l_panOptions.pov =
+    //{
+        //heading: this.sheading,
+        //pitch: this.spitch,
+        //zoom: this.szoom
+    //};
 
     pan = new google.maps.StreetViewPanorama(l_panDiv, l_panOptions);
 
@@ -232,14 +238,6 @@ SVO.prototype.m_updateMarker = function ()
     }
 }
 
-// display a message when the user clicks on the marker's div
-function markerClick()
-{
-    eid("markerInfo").innerHTML = "<h2>Meow !!!</h2>";
-}
-
-
-
 function loadPage()
 {
     svo = new SVO();
@@ -309,23 +307,10 @@ function imageID(image) {
 
 
 function initialize() {
-    loadPage();
+    svo = new SVO();
+    svo.m_initMap();
 
     var svService = new google.maps.StreetViewService();
-
-    svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        document.getElementById('flip-button'));
-    svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        document.getElementById('wymerlink'));
-    svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
-        document.getElementById('wymercopyright'));
-
-    if (location.hash) {
-        var startMarker = location.hash.slice(1);
-    } else {
-        var startMarker = imageID(
-            imageList[Math.floor(Math.random() * imageList.length)]);
-    }
 
     $.each(imageList, function(i, image) {
         var pos = {lat: image.lat, lng: image.lng};
@@ -349,7 +334,7 @@ function initialize() {
                     // Technically 90 but empirically 80 works better with
                     // Jessie's data collection
                     svo.spitch = image.pitch_from_down - 80;
-                    svo.m_setImagePoint()
+                    svo.m_calcImagePoint()
                     svo.m_setImage(image.image_url, image['CAT Record URL']);
 
                     var options = {
@@ -388,11 +373,30 @@ function initialize() {
 
         });
     });
-    var initMarker = markerIndex[startMarker];
-    if (initMarker !== undefined) {
-        google.maps.event.trigger(initMarker, "click");
-        //map.setCenter(pos);
+
+
+    var startMarker = location.hash.slice(1);
+    if ((! startMarker) || (markerIndex[startMarker] === undefined)) {
+        var startMarker = imageID(
+            imageList[Math.floor(Math.random() * imageList.length)]);
     }
+
+    var initMarker = markerIndex[startMarker];
+
+    // Set the map center, panorama location, etc.
+    // So maybe don't set those in the initMap??
+    svo.m_initPanorama();
+    svo.m_initMarker();
+
+    google.maps.event.trigger(initMarker, "click");
+
+    svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
+        document.getElementById('flip-button'));
+    svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+        document.getElementById('wymerlink'));
+    svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
+        document.getElementById('wymercopyright'));
+
 
     $("#flip-button").click(function() {
         svo.m_toggleVisible();
