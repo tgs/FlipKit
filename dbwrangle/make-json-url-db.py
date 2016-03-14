@@ -64,6 +64,7 @@ for silly, nice in sillyname_nicename.items():
                     for parse in parsed_urls], header=nice)
 
 print set(tab['Tag_1']).union(set(tab['Tag_2']))
+del tab['MAPS_URL']
 
 with open(sys.argv[2], 'w') as out:
     print >>out, tab.json

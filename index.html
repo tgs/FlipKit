@@ -68,11 +68,34 @@
         font-size: 120%;
         text-align: center;
       }
-      #wymerlink{
+      .wymermapcontrol {
         background-color: white;
-        line-height: 35px;
         color: #5c5c5c;
         border: solid thin black;
+        background-color: white;
+      }
+      .wymermapcontrol p {
+        margin-bottom: 0px;
+      }
+      .wymermapcontrol label {
+        font-weight: 100;
+        margin-bottom: 1px;
+      }
+      #filtertags {
+        text-align: left;
+        color: #333;
+        font-size: 90%;
+      }
+      #filtertags input {
+        margin-top: 1px;
+      }
+      #filtertags .title {
+        text-align: center;
+        font-size: 110%;
+        font-weight: bold;
+      }
+      #wymerlink {
+        line-height: 35px;
         width: 15em;
         height: 35px;
       }
@@ -89,9 +112,12 @@
     </style>
   </head>
   <body>
-    <div class="wymercontrol" id="wymerlink" style="position: absolute; right: -100000px;">
+    <div class="wymercontrol wymermapcontrol" id="wymerlink" style="position: absolute; right: -100000px;">
       <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
     </div>
+    <div class="wymercontrol wymermapcontrol" id="filtertags"><p class="title">
+      Filter Images
+    </p></div>
     <div id="map">
     </div>
     <div id="pano">
