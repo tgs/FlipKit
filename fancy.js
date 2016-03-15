@@ -182,6 +182,16 @@ SVO.prototype.m_toggleVisible = function(visible)
     $('#marker').toggle(visible);
 }
 
+function updateFlipButton() {
+    var tail;
+    if ($('#marker').is(':visible')) {
+        tail = "to Modern Image";
+    } else {
+        tail = "to Historic Image";
+    }
+    $('#flip-button-change').text(tail);
+}
+
 SVO.prototype.m_updateMarker = function ()
 {
     var l_pov = pan.getPov();
@@ -358,6 +368,7 @@ function initialize() {
                         }
                     };
                     svo.m_toggleVisible(true);
+                    updateFlipButton();
                 } else {
                     console.log("Failed a try to get pano data");
                     if (giveUpNextTime) {
@@ -408,6 +419,7 @@ function initialize() {
 
     $("#flip-button").click(function() {
         svo.m_toggleVisible();
+        updateFlipButton();
     });
 
     // Notice if the user types a valid Wymer number in the #hash.
