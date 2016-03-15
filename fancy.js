@@ -400,7 +400,7 @@ function initialize() {
         document.getElementById('flip-button'));
     svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
         document.getElementById('wymerlink'));
-    svo.map.controls[google.maps.ControlPosition.LEFT].push(
+    svo.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
         document.getElementById('filtertags'));
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
