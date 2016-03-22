@@ -28,6 +28,25 @@
         width: 50%;
         border: thick solid white;
       }
+      div.wymerpanocontrol {
+        border: thin solid black;
+        color: #fff;
+        background-color: #222;
+        opacity: 0.8;
+      }
+      div#sharelinks {
+        width: 33px;
+        padding: 0px;
+        text-align: center;
+      }
+      div#sharelinks a {
+        display: inline-block;
+        width: 100%;
+        padding: 1px;
+      }
+      div#sharelinks a:hover {
+        background: #666;
+      }
       div#flip-button {
         border: thin solid white;
         cursor: pointer;
@@ -43,11 +62,7 @@
         width: 12em;
       }
       div#wymercopyright {
-        border: thin solid black;
-        color: #fff;
         font-size: 80%;
-        background-color: #222;
-        opacity: 0.8;
         padding: 0px;
       }
       div#wymercopyright a:link { color: #fff; }
@@ -111,7 +126,7 @@
         margin-top: 150px !important;
       }
     </style>
-  </head>
+    </head>
   <body>
     <div class="wymercontrol wymermapcontrol" id="wymerlink" style="position: absolute; right: -100000px;">
       <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
@@ -127,9 +142,15 @@
         <span id="flip-button-change">between Historic and Modern Views</span>
       </div>
       <div oncontextmenu="return false;" ondragstart="return false;" id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
-      <div id="wymercopyright">
+      <div class="wymerpanocontrol" id="wymercopyright">
         <a href="http://www.dchistory.org/">Historical Images courtesy HSW</a> |
         Thanks <a href="http://teammaps.com/">Team Maps</a>
+      </div>
+      <div class="wymercontrol wymerpanocontrol" id="sharelinks">
+        <a href="#" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
+        <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
+        <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
+        <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
       </div>
     </div>
     <div id="markerInfo"></div>

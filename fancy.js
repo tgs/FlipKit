@@ -192,6 +192,20 @@ function updateFlipButton() {
     $('#flip-button-change').text(tail);
 }
 
+var shareButtonLinkTemplates = {
+    "e-mail": "mailto:?body=URL",
+    "facebook": "https://www.facebook.com/sharer/sharer.php?u=URL",
+    "reddit": "https://reddit.com/submit?url=URL",
+    "twitter": "https://twitter.com/share?url=URL"
+};
+function updateShareButtons() {
+    for (var name in shareButtonLinkTemplates) {
+        var anchor = eid(name);
+        anchor.href = shareButtonLinkTemplates[name].replace(
+            "URL", encodeURIComponent(window.location.href));
+    }
+}
+
 SVO.prototype.m_updateMarker = function ()
 {
     var l_pov = pan.getPov();
@@ -369,6 +383,7 @@ function initialize() {
                     };
                     svo.m_toggleVisible(true);
                     updateFlipButton();
+                    updateShareButtons();
                 } else {
                     console.log("Failed a try to get pano data");
                     if (giveUpNextTime) {
@@ -415,6 +430,8 @@ function initialize() {
         document.getElementById('filtertags'));
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
+    svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+        document.getElementById('sharelinks'));
 
 
     $("#flip-button").click(function() {
