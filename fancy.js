@@ -431,7 +431,7 @@ function initialize() {
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
-        document.getElementById('sharelinks'));
+        document.getElementById('cherlinks'));
 
 
     $("#flip-button").click(function() {
