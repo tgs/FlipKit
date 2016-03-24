@@ -32,7 +32,7 @@
         border: thin solid black;
         color: #fff;
         background-color: #222;
-        opacity: 0.8;
+        opacity: 0.85;
       }
       div#cherlinks {
         width: 33px;
@@ -46,6 +46,27 @@
       }
       div#cherlinks a:hover {
         background: #666;
+      }
+      div#probs {
+        padding: 0px;
+        z-index: 999999999;
+        position: relative;
+      }
+      div#probs a {
+        color: #e32;
+      }
+      div#probs:hover #helptext {
+        display: inline;
+        padding: 3px;
+      }
+      #helptext {
+        display: none;
+      }
+      #exclaim {
+        border: solid thin #444;
+        font-size: 130%;
+        display: inline-block;
+        width: 31px;
       }
       div#flip-button {
         border: thin solid white;
@@ -76,7 +97,9 @@
         display: none;
       }
       div.wymercontrol {
-        margin: 10px;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
         padding-left: 1em;
         padding-right: 1em;
         font-family: 'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;
@@ -100,7 +123,7 @@
       #filtertags {
         text-align: left;
         color: #333;
-        font-size: 90%;
+        font-size: 100%;
       }
       #filtertags input {
         margin-top: 1px;
@@ -151,6 +174,11 @@
         <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
         <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
         <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
+      </div>
+      <div class="wymercontrol wymerpanocontrol" id="probs">
+        <a href="http://www.wymersdc.com/contact/" target="_blank">
+          <span id="helptext">Report image problem</span><span id="exclaim">!</span>
+        </a>
       </div>
     </div>
     <div id="markerInfo"></div>

@@ -31,3 +31,8 @@ Need to think about synonyms - J will make "places of worship" category, includi
 
 Image squishes... Maybe directly manipulate the max-height and max-width of the image?
 Or maybe look at the images and set their dimensions in the json file.
+
+
+
+https://jsfiddle.net/gnqdbLLs/ - side by side image zoom version
+
