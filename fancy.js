@@ -310,19 +310,18 @@ function normalizeAngle(a)
 }
 
 
-var justone = [{
-    "Notes" : "",
-    "heading" : 356.92,
-    "TITLE" : "House at 1800 N Portal Drive",
-    "lat" : 38.9897227,
-    "OBJECTID" : "WY 0003.01",
-    "MAPS_URL" : "https://www.google.com/maps/place/1800+N+Portal+Dr+NW,+Washington,+DC+20012/@38.9897227,-77.0398903,3a,75y,356.92h,87.53t/data=!3m7!1e1!3m5!1sDHFoLrc7S3HS2ye-s8vNuA!2e0!6s%2F%2Fgeo0.ggpht.com%2Fcbk%3Fpanoid%3DDHFoLrc7S3HS2ye-s8vNuA%26output%3Dthumbnail%26cb_client%3Dmaps_sv.tactile.gps%26thumb%3D2%26w%3D203%26h%3D100%26yaw%3D214.89781%26pitch%3D0!7i13312!8i6656!4m2!3m1!1s0x89b7c8c210a10d13:0x1bf4fc13c610ae9f",
-    "lng" : -77.0398903,
-    "pano" : "DHFoLrc7S3HS2ye",
-    "a" : 3,
-    "y" : 75,
-    "pitch_from_down" : 87.53
-}]
+var engine = new UAParser().getEngine().name;
+
+function setPanoAndPov(options) {
+    if (engine === "Gecko") {
+        svo.pan.setOptions(options);
+    } else {
+        svo.pan.setPano(options.pano);
+        setTimeout(function() {
+            svo.pan.setPov(options.pov);
+        }, 200);
+    }
+}
 
 
 function imageID(image) {
@@ -372,15 +371,8 @@ function initialize() {
 
                     // Changing the location and POV at the same time causes horrible
                     // display problems!
-                    svo.pan.setPano(options.pano);
-                    svo.pan.changed = function(key) {
-                        //console.log(key + ':' + svo.pan[key]);
-                        if (key === 'status') {
-                            // Just listen once!
-                            svo.pan.changed = function() {};
-                            svo.pan.setPov(options.pov);
-                        }
-                    };
+                    //svo.pan.setOptions(options);
+                    setPanoAndPov(options);
                     svo.m_toggleVisible(true);
                     updateFlipButton();
                     updateShareButtons();
