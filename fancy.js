@@ -1,6 +1,68 @@
 var svo = null;
 var markerIndex = {};
 
+var adjustmentmode = true;
+
+function addKeybindings() {
+    svo.map.setOptions({keyboardShortcuts: false});
+    function up() {
+        svo.m_calcImagePoint(); svo.m_updateMarker();
+        $('#adjust-out').text(
+            JSON.stringify({
+                    fixedHeading:  svo.sheading,
+                    fixedPitch:    svo.spitch,
+                    fixedDistance: svo.imageDistance,
+                    imageID:       svo.imageID
+                },
+                function(key, val) {
+                    return val.toFixed ? Number(val.toFixed(3)) : val;
+                },
+                2)).blur();
+    }
+    Mousetrap.bind('a', function() { svo.imageDistance += 2; up(); });
+    Mousetrap.bind('s', function() { svo.imageDistance -= 2; up(); });
+
+    Mousetrap.bind('up',   function() { svo.spitch += 1; up(); });
+    Mousetrap.bind('down', function() { svo.spitch -= 1; up(); });
+
+    Mousetrap.bind('right', function() { svo.sheading += 1; up(); });
+    Mousetrap.bind('left',  function() { svo.sheading -= 1; up(); });
+
+    Mousetrap.bind('space', function() { svo.m_toggleVisible(); });
+
+    function padToFour(number) {
+        if (number<=9999) { number = ("000"+number).slice(-4); }
+        return number;
+    }
+
+    function wynum(s) { return +(s.slice(2)) }
+    function nextImage(direction) {
+        var num = wynum(svo.imageID);
+        var id = svo.imageID;
+        do {
+            num += direction;
+            id = 'WY' + padToFour(num);
+            console.log(id);
+            if ((num < 0) || (num > 3000)) {  // id number limits
+                return svo.imageID;
+            }
+        } while (! (id in markerIndex));
+        return id;
+    }
+    Mousetrap.bind('n', function() {
+        google.maps.event.trigger(markerIndex[nextImage(1)], "click");
+        $("#adjust-out").text("");
+    });
+    Mousetrap.bind('p', function() {
+        google.maps.event.trigger(markerIndex[nextImage(-1)], "click");
+        $("#adjust-out").text("");
+    });
+
+}
+
+function addOutputTextArea() {
+}
+
 // the main application object
 // Many thanks to Team Maps.
 // SVO (Street View Overlay) modified from Team Maps example,
@@ -355,9 +417,11 @@ function initialize() {
                 if (status === google.maps.StreetViewStatus.OK) {
                     console.log("Got panorama " + 
                                 (giveUpNextTime ? "by location" : "by id"));
-                    location.hash = imageID(image);
+                    svo.imageID = imageID(image);
+                    location.hash = svo.imageID;
                     svo.streetPt = new google.maps.LatLng(image.lat, image.lng);
                     svo.sheading = image.heading;
+                    svo.imageDistance = 40;
                     // Technically 90 but empirically 80 works better with
                     // Jessie's data collection
                     svo.spitch = image.pitch_from_down - 80;
@@ -426,6 +490,18 @@ function initialize() {
         document.getElementById('probs'));
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         document.getElementById('cherlinks'));
+
+    if (adjustmentmode) {
+        addKeybindings();
+        $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
+            .insertAfter('body')
+            .css("padding-left", "20px")
+            .css("width", "250px")
+            .css("height", "250px");
+        svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
+            eid('adjust-out'));
+    }
+
 
     $("#flip-button").click(function() {
         svo.m_toggleVisible();
