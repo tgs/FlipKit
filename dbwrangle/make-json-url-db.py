@@ -1,22 +1,18 @@
 #!/usr/bin/env python
+
+import csv
+import json
 import sys
 import os
-import tablib
 import glob
 from pctry import whole_url
 
-def find(lst):
-    for i, el in enumerate(lst):
-        if el:
-            yield i
+
+class SkipRow(Exception):
+    pass
 
 
-tab = (tablib.Dataset()
-       .load(open(sys.argv[1]).read().strip()))
-
-# TABLIB ACTUALLY SUCKS.
-images = []
-for rnum, row in reversed(list(enumerate(tab.dict))):
+def add_image_url(row):
     accession = row['OBJECTID']
     if '.' in accession:
         accession = accession.rsplit('.')[0]
@@ -28,26 +24,10 @@ for rnum, row in reversed(list(enumerate(tab.dict))):
         matches = sorted(matches, key=len)
         if len(matches) > 1:
             print "Several matches, choosing last:", matches
-        images.append(os.path.relpath(matches[-1], start='..'))
+        row['image_url'] = os.path.relpath(matches[-1], start='..')
     else:
-        print "Couldn't find image for", row['OBJECTID']
-        del tab[rnum]
+        raise SkipRow("Couldn't find image")
 
-tab.append_col(reversed(images), header="image_url")
-
-
-parsed_urls = []
-for rnum, row in reversed(list(enumerate(tab.dict))):  # py2 not lazy
-    try:
-        if 'historydc' in row['MAPS_URL']:
-            print "Skipping", row['OBJECTID'], "since it has historydc in google maps url"
-            del tab[rnum]
-        else:
-            parsed_urls.append(whole_url.parse_string(row['MAPS_URL']))
-    except:
-        print "Couldn't parse", row['MAPS_URL'], "on", row['OBJECTID']
-        raise
-parsed_urls = list(reversed(parsed_urls))
 
 sillyname_nicename = {
     '1s': 'pano',
@@ -59,12 +39,52 @@ sillyname_nicename = {
     'y': 'y', # ??
 }
 
-for silly, nice in sillyname_nicename.items():
-    tab.append_col([parse.get(silly, '') if parse else ''
-                    for parse in parsed_urls], header=nice)
+def parse_maps_url_to_fields(row):
+    if not row['MAPS_URL']:
+        raise SkipRow("No maps_url")
+    if 'historydc' in row['MAPS_URL']:
+        raise SkipRow("MAPS_URL looks wrong")
 
-print set(tab['Tag_1']).union(set(tab['Tag_2']))
-del tab['MAPS_URL']
+    parse = whole_url.parse_string(row['MAPS_URL'])
 
-with open(sys.argv[2], 'w') as out:
-    print >>out, tab.json
+    #if not parse:
+        #raise SkipRow("Couldn't parse MAPS_URL")
+
+    for silly, nice in sillyname_nicename.items():
+        row[nice] = parse.get(silly, '')
+
+
+rows = csv.DictReader(open(sys.argv[1]))
+fieldnames_out = [
+    'lat',
+    'Tag_2',
+    'y',
+    'OBJECTID',
+    'heading',
+    'Notes',
+    'Tag_1',
+    'pitch_from_down',
+    'CAT Record URL',
+    'a',
+    'image_url',
+    'TITLE',
+    'lng',
+    'pano',
+]
+
+rows_out = []
+
+
+for row in rows:
+    try:
+        add_image_url(row)
+        parse_maps_url_to_fields(row)
+
+        del row['MAPS_URL']
+
+        rows_out.append(row)
+    except SkipRow as skip:
+        print 'Problem with', row['OBJECTID'] + ":", str(skip)
+        continue
+
+json.dump(rows_out, open(sys.argv[2], 'w'), indent=2)
