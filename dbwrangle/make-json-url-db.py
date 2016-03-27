@@ -47,40 +47,48 @@ def parse_maps_url_to_fields(row):
 
     parse = whole_url.parse_string(row['MAPS_URL'])
 
-    #if not parse:
-        #raise SkipRow("Couldn't parse MAPS_URL")
-
     for silly, nice in sillyname_nicename.items():
         row[nice] = parse.get(silly, '')
 
 
-rows = csv.DictReader(open(sys.argv[1]))
-fieldnames_out = [
-    'lat',
-    'Tag_2',
-    'y',
-    'OBJECTID',
-    'heading',
-    'Notes',
-    'Tag_1',
-    'pitch_from_down',
-    'CAT Record URL',
-    'a',
-    'image_url',
-    'TITLE',
-    'lng',
-    'pano',
-]
+def locate_image(row):
+    refined_raw = row['Refined Position'].strip()
 
+    row['image_distance'] = 40
+    row['pitch'] = row['pitch_from_down'] - 80
+
+    if refined_raw:
+        try:
+            refined = json.loads(refined_raw)
+        except ValueError as e:
+            print "This is not JSON:", repr(row['Refined Position'])
+            return
+
+        if row['imageID'] != refined['imageID']:
+            print 'BADDDDDDDDDDDDDDDD', row['imageID'] + ' != ' + refined['imageID']
+            return
+
+        row['heading'] = refined['fixedHeading']
+        row['pitch'] = refined['fixedPitch']
+        row['image_distance'] = refined['fixedDistance']
+        print "Refined", row['imageID']
+
+rows = csv.DictReader(open(sys.argv[1]))
 rows_out = []
 
 
 for row in rows:
     try:
+        row['imageID'] = row['OBJECTID'][0:2] + row['OBJECTID'][3:7]
         add_image_url(row)
         parse_maps_url_to_fields(row)
+        locate_image(row)
 
         del row['MAPS_URL']
+        del row['Refined Position']
+        del row['a']
+        del row['y']
+        del row['pitch_from_down']
 
         rows_out.append(row)
     except SkipRow as skip:

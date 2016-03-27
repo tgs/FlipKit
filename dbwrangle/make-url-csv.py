@@ -12,7 +12,7 @@ def find(lst):
 tab = (tablib.Dataset()
        .load(open(sys.argv[1]).read())
        .subset(cols=['OBJECTID', 'TITLE', 'MAPS URL', 'Notes',
-                     'CAT Record URL', 'Tag 1', 'Tag 2']))
+                     'CAT Record URL', 'Tag 1', 'Tag 2', 'Refined Position']))
 tab.headers[2] = 'MAPS_URL'
 tab.headers[5] = 'Tag_1'
 tab.headers[6] = 'Tag_2'
