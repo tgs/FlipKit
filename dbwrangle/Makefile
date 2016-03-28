@@ -5,7 +5,7 @@ locations.json: locations.json.tmp
 	#json_pp < "$<" > $@
 	cp "$<" "$@"
 
-locations.json.tmp: urls.csv make-json-url-db.py pctry.py
+locations.json.tmp: urls.csv make-json-url-db.py pctry.py ../collection/image-info
 	./make-json-url-db.py "$<" $@
 
 

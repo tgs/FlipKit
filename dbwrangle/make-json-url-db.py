@@ -71,7 +71,7 @@ def locate_image(row):
         row['heading'] = refined['fixedHeading']
         row['pitch'] = refined['fixedPitch']
         row['image_distance'] = refined['fixedDistance']
-        print "Refined", row['imageID']
+        #print "Refined", row['imageID']
 
 
 import ast
@@ -79,6 +79,9 @@ image_dims = ast.literal_eval(open('../collection/image-info').read())
 def add_image_dimensions(row):
     basename = os.path.basename(row['image_url'])
     row.update(image_dims[basename])
+    d = image_dims[basename]
+    if d['height'] > d['width']:
+        print row['OBJECTID'], "looks like it's portrait"
 
 
 rows = csv.DictReader(open(sys.argv[1]))
