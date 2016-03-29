@@ -1,7 +1,14 @@
 define(['mousetrap', 'jquery'], function(mousetrap, $) {
     // also depends on google maps, but only once the inner func gets called,
     // and I don't want to give the async callback twice
-    function addKeybindings(svo) {
+    function padToFour(number) {
+        if (number<=9999) { number = ("000"+number).slice(-4); }
+        return number;
+    }
+
+    function wynum(s) { return +(s.slice(2)) }
+
+    function addKeybindings(svo, markerIndex) {
         svo.map.setOptions({keyboardShortcuts: false});
         function up() {
             svo.m_calcImagePoint(); svo.m_updateMarker();
@@ -28,12 +35,6 @@ define(['mousetrap', 'jquery'], function(mousetrap, $) {
 
         Mousetrap.bind('space', function() { svo.m_toggleVisible(); });
 
-        function padToFour(number) {
-            if (number<=9999) { number = ("000"+number).slice(-4); }
-            return number;
-        }
-
-        function wynum(s) { return +(s.slice(2)) }
         function nextImage(direction) {
             var num = wynum(svo.imageID);
             var id = svo.imageID;

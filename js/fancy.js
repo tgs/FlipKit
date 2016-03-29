@@ -447,7 +447,7 @@ function initialize() {
             .css("padding-left", "20px")
             .css("width", "250px")
             .css("height", "250px");
-        adjustmentmode.addKeybindings(svo);
+        adjustmentmode.addKeybindings(svo, markerIndex);
         svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
             eid('adjust-out'));
     }
