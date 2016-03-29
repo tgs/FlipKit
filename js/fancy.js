@@ -1,68 +1,12 @@
-requirejs(['mousetrap', 'ua-parser-js', 'imageList', 'jquery',
+requirejs(['mousetrap', 'ua-parser-js', 'imageList', 'jquery', 'adjustmentmode',
           'goog!maps,3,other_params:key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&libraries=geometry'],
-          function(Mousetrap, UAParser, imageListContainer, $) {
+          function(Mousetrap, UAParser, imageListContainer, $, adjustmentmode) {
 var imageList = imageListContainer.imageList;
 var svo = null;
 var markerIndex = {};
 
-var adjustmentmode = true;
+var useAdjustmentmode = true;
 
-function addKeybindings() {
-    svo.map.setOptions({keyboardShortcuts: false});
-    function up() {
-        svo.m_calcImagePoint(); svo.m_updateMarker();
-        $('#adjust-out').text(
-            JSON.stringify({
-                    fixedHeading:  svo.sheading,
-                    fixedPitch:    svo.spitch,
-                    fixedDistance: svo.imageDistance,
-                    imageID:       svo.imageID
-                },
-                function(key, val) {
-                    return val.toFixed ? Number(val.toFixed(3)) : val;
-                },
-                2)).blur();
-    }
-    Mousetrap.bind('a', function() { svo.imageDistance += 2; up(); });
-    Mousetrap.bind('s', function() { svo.imageDistance -= 2; up(); });
-
-    Mousetrap.bind('up',   function() { svo.spitch += 1; up(); });
-    Mousetrap.bind('down', function() { svo.spitch -= 1; up(); });
-
-    Mousetrap.bind('right', function() { svo.sheading += 1; up(); });
-    Mousetrap.bind('left',  function() { svo.sheading -= 1; up(); });
-
-    Mousetrap.bind('space', function() { svo.m_toggleVisible(); });
-
-    function padToFour(number) {
-        if (number<=9999) { number = ("000"+number).slice(-4); }
-        return number;
-    }
-
-    function wynum(s) { return +(s.slice(2)) }
-    function nextImage(direction) {
-        var num = wynum(svo.imageID);
-        var id = svo.imageID;
-        do {
-            num += direction;
-            id = 'WY' + padToFour(num);
-            console.log(id);
-            if ((num < 0) || (num > 3000)) {  // id number limits
-                return svo.imageID;
-            }
-        } while (! (id in markerIndex));
-        return id;
-    }
-    Mousetrap.bind('n', function() {
-        google.maps.event.trigger(markerIndex[nextImage(1)], "click");
-        $("#adjust-out").text("");
-    });
-    Mousetrap.bind('p', function() {
-        google.maps.event.trigger(markerIndex[nextImage(-1)], "click");
-        $("#adjust-out").text("");
-    });
-
-}
 
 function addOutputTextArea() {
 }
@@ -497,13 +441,13 @@ function initialize() {
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         document.getElementById('cherlinks'));
 
-    if (adjustmentmode) {
-        addKeybindings();
+    if (useAdjustmentmode) {
         $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
             .insertAfter('body')
             .css("padding-left", "20px")
             .css("width", "250px")
             .css("height", "250px");
+        adjustmentmode.addKeybindings(svo);
         svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
             eid('adjust-out'));
     }
