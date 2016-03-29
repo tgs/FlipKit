@@ -1,6 +1,7 @@
 requirejs(['mousetrap', 'ua-parser-js', 'imageList', 'jquery',
           'goog!maps,3,other_params:key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&libraries=geometry'],
-          function(Mousetrap, UAParser, imageList, $) {
+          function(Mousetrap, UAParser, imageListContainer, $) {
+var imageList = imageListContainer.imageList;
 var svo = null;
 var markerIndex = {};
 
