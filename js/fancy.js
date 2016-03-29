@@ -2,227 +2,230 @@ requirejs(
     ['mousetrap', 'ua-parser-js', 'imageList', 'jquery', 'adjustmentmode', 'overlay',
         'goog!maps,3,other_params:key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&libraries=geometry'],
     function(Mousetrap, UAParser, imageListContainer, $, adjustmentmode, overlay) {
-        var imageList = imageListContainer.imageList;
-        var svo = null;
-        var markerIndex = {};
 
-var useAdjustmentmode = true;
+    var imageList = imageListContainer.imageList;
+    var svo = null;
+    var markerIndex = {};
 
-var eid = overlay.eid;
+    var useAdjustmentmode = true;
 
-function updateFlipButton() {
-    var tail;
-    if ($('#marker').is(':visible')) {
-        tail = "to Modern Image";
-    } else {
-        tail = "to Historic Image";
-    }
-    $('#flip-button-change').text(tail);
-}
+    var eid = overlay.eid;
 
-
-var shareButtonLinkTemplates = {
-    "e-mail": "mailto:?body=URL",
-    "facebook": "https://www.facebook.com/sharer/sharer.php?u=URL",
-    "reddit": "https://reddit.com/submit?url=URL",
-    "twitter": "https://twitter.com/share?url=URL"
-};
-function updateShareButtons() {
-    for (var name in shareButtonLinkTemplates) {
-        var anchor = eid(name);
-        anchor.href = shareButtonLinkTemplates[name].replace(
-            "URL", encodeURIComponent(window.location.href));
-    }
-}
-var engine = new UAParser().getEngine().name;
-
-function setPanoAndPov(options) {
-    if (engine === "Gecko") {
-        svo.pan.setOptions(options);
-    } else {
-        svo.pan.setPano(options.pano);
-        setTimeout(function() {
-            svo.pan.setPov(options.pov);
-        }, 200);
-    }
-}
-
-
-function initialize() {
-    svo = new overlay.SVO();
-    svo.m_initMap();
-
-    var svService = new google.maps.StreetViewService();
-
-    var imageCategories = {};
-
-    $.each(imageList, function(i, image) {
-        var pos = {lat: image.lat, lng: image.lng};
-        var marker = new google.maps.Marker({
-            position: pos,
-            map: svo.map,
-            title: image.TITLE
-        });
-        markerIndex[image.imageID] = marker;
-        imageCategories[image.Tag_1] = 1;
-        imageCategories[image.Tag_2] = 1;
-
-        marker.addListener('click', function() {
-            var giveUpNextTime = false;
-
-            var gotPanoramaCallback = function(data, status) {
-                if (status === google.maps.StreetViewStatus.OK) {
-                    console.log("Got panorama " + 
-                                (giveUpNextTime ? "by location" : "by id"));
-                    svo.imageID = image.imageID;
-                    location.hash = svo.imageID;
-                    svo.streetPt = new google.maps.LatLng(image.lat, image.lng);
-                    svo.sheading = image.heading;
-                    svo.imageDistance = image.image_distance;
-                    svo.realImageHeight = image.height;
-                    svo.realImageWidth = image.width;
-                    // Technically 90 but empirically 80 works better with
-                    // Jessie's data collection
-                    svo.spitch = image.pitch;
-                    svo.m_calcImagePoint()
-                    svo.m_setImage(image.image_url, image['CAT Record URL']);
-
-                    var options = {
-                        pano: data.location.pano,
-                        pov: {heading: image.heading, pitch: image.pitch}
-                    };
-
-                    // Changing the location and POV at the same time causes horrible
-                    // display problems!
-                    //svo.pan.setOptions(options);
-                    setPanoAndPov(options);
-                    svo.m_toggleVisible(true);
-                    updateFlipButton();
-                    updateShareButtons();
-                } else {
-                    console.log("Failed a try to get pano data");
-                    if (giveUpNextTime) {
-                        console.error('Street View data not found for this location.');
-                    } else {
-                        giveUpNextTime = true;
-                        svService.getPanorama({
-                            location: pos,
-                            radius: 20,
-                            preference: google.maps.StreetViewPreference.NEAREST},
-                            gotPanoramaCallback);
-                    }
-                }
-            };
-
-            svService.getPanorama({pano: image.pano}, gotPanoramaCallback);
-
-        });
-    });
-
-    delete imageCategories[''];
-
-
-    var startMarker = location.hash.slice(1);
-    if ((! startMarker) || (markerIndex[startMarker] === undefined)) {
-        var startMarker = (imageList[
-            Math.floor(Math.random() * imageList.length)].imageID);
-    }
-
-    var initMarker = markerIndex[startMarker];
-
-    // Set the map center, panorama location, etc.
-    // So maybe don't set those in the initMap??
-    svo.m_initPanorama();
-    svo.m_initMarker();
-
-    google.maps.event.trigger(initMarker, "click");
-
-    svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        document.getElementById('flip-button'));
-    svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        document.getElementById('wymerlink'));
-    svo.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
-        document.getElementById('filtertags'));
-    svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
-        document.getElementById('wymercopyright'));
-    svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
-        document.getElementById('probs'));
-    svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
-        document.getElementById('cherlinks'));
-
-    if (useAdjustmentmode) {
-        var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
-            .insertAfter('body')
-            .css("padding-left", "20px")
-            .css("width", "250px")
-            .css("height", "250px");
-        adjustmentmode.addKeybindings(svo, markerIndex, adjOut);
-        svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
-            eid('adjust-out'));
-    }
-
-    $("#flip-button").click(function() {
-        svo.m_toggleVisible();
-        updateFlipButton();
-    });
-
-    // Notice if the user types a valid Wymer number in the #hash.
-    window.onhashchange = function() {
-        var id = location.hash.slice(1);
-        if (id && (id in markerIndex)) {
-            google.maps.event.trigger(
-                markerIndex[id], "click");
-        }
-    };
-
-    $.fn.filterCheckBoxes = function(categories, options) {
-        var opts = $.extend({}, $.fn.filterCheckBoxes.defaults, options);
-
-        var contents = $.map(categories, function(cat) {
-            var input = $('<input type="checkbox" checked>')
-            .attr('name', opts.name)
-            .attr('value', cat).wrap('<label>').parent();
-            $('<span>').text(cat).appendTo(input);
-            return input.wrap('<p>').parent();
-        });
-        this.append(contents);
-        return this;
-    };
-
-
-    $.fn.filterCheckBoxes.defaults = {
-        name: 'filtertags',
-    };
-    var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
-    filterChecks.on('change', function() {
-        var selected = filterChecks.filter(':checked')
-            .map(function() { return this.value; })
-            .toArray();
-        updateFilteredMarkers(selected);
-    });
-    filterChecks.first().trigger('change');
-
-}
-
-
-
-function updateFilteredMarkers(enabledCategories) {
-    $.each(imageList, function(i, image) {
-        var imgid = image.imageID;
-        if ($.inArray(image['Tag_1'], enabledCategories) > -1 ||
-            $.inArray(image['Tag_2'], enabledCategories) > -1) {
-            if (null === markerIndex[imgid].getMap()) {
-                markerIndex[imgid].setMap(svo.map);
-            }
-            console.log('Kept ' + imgid);
+    function updateFlipButton() {
+        var tail;
+        if ($('#marker').is(':visible')) {
+            tail = "to Modern Image";
         } else {
-            markerIndex[imgid].setMap(null);
-            console.log('Removed ' + imgid);
+            tail = "to Historic Image";
         }
-    });
-}
+        $('#flip-button-change').text(tail);
+    }
 
-initialize();
+    var shareButtonLinkTemplates = {
+        "e-mail": "mailto:?body=URL",
+        "facebook": "https://www.facebook.com/sharer/sharer.php?u=URL",
+        "reddit": "https://reddit.com/submit?url=URL",
+        "twitter": "https://twitter.com/share?url=URL"
+    };
+    function updateShareButtons() {
+        for (var name in shareButtonLinkTemplates) {
+            var anchor = eid(name);
+            anchor.href = shareButtonLinkTemplates[name].replace(
+                "URL", encodeURIComponent(window.location.href));
+        }
+    }
 
-          }
-);
+
+    var engine = new UAParser().getEngine().name;
+
+    function setPanoAndPov(options) {
+        if (engine === "Gecko") {
+            svo.pan.setOptions(options);
+        } else {
+            svo.pan.setPano(options.pano);
+            setTimeout(function() {
+                svo.pan.setPov(options.pov);
+            }, 200);
+        }
+    }
+
+
+    function initialize() {
+        svo = new overlay.SVO();
+        svo.m_initMap();
+
+        var svService = new google.maps.StreetViewService();
+
+        var imageCategories = {};
+
+        $.each(imageList, function(i, image) {
+            var pos = {lat: image.lat, lng: image.lng};
+            var marker = new google.maps.Marker({
+                position: pos,
+                map: svo.map,
+                title: image.TITLE
+            });
+            markerIndex[image.imageID] = marker;
+            imageCategories[image.Tag_1] = 1;
+            imageCategories[image.Tag_2] = 1;
+
+            marker.addListener('click', function() {
+                var giveUpNextTime = false;
+
+                var gotPanoramaCallback = function(data, status) {
+                    if (status === google.maps.StreetViewStatus.OK) {
+                        console.log("Got panorama " + 
+                                    (giveUpNextTime ? "by location" : "by id"));
+                        updateOverlayImageInfo(svo, image);
+                        location.hash = image.imageID;
+
+                        var options = {
+                            pano: data.location.pano,
+                            pov: {heading: image.heading, pitch: image.pitch}
+                        };
+
+                        // Changing the location and POV at the same time causes horrible
+                        // display problems!
+                        //svo.pan.setOptions(options);
+                        setPanoAndPov(options);
+                        svo.m_toggleVisible(true);
+                        updateFlipButton();
+                        updateShareButtons();
+                    } else {
+                        console.log("Failed a try to get pano data");
+                        if (giveUpNextTime) {
+                            console.error('Street View data not found for this location.');
+                        } else {
+                            giveUpNextTime = true;
+                            svService.getPanorama({
+                                location: pos,
+                                radius: 20,
+                                preference: google.maps.StreetViewPreference.NEAREST},
+                                gotPanoramaCallback);
+                        }
+                    }
+                };
+
+                svService.getPanorama({pano: image.pano}, gotPanoramaCallback);
+
+            });
+        });
+
+        delete imageCategories[''];
+
+
+        var startMarker = location.hash.slice(1);
+        if ((! startMarker) || (markerIndex[startMarker] === undefined)) {
+            var startMarker = (imageList[
+                Math.floor(Math.random() * imageList.length)].imageID);
+        }
+
+        var initMarker = markerIndex[startMarker];
+
+        // Set the map center, panorama location, etc.
+        // So maybe don't set those in the initMap??
+        svo.m_initPanorama();
+        svo.m_initMarker();
+
+        google.maps.event.trigger(initMarker, "click");
+
+        svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
+            document.getElementById('flip-button'));
+        svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+            document.getElementById('wymerlink'));
+        svo.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
+            document.getElementById('filtertags'));
+        svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
+            document.getElementById('wymercopyright'));
+        svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+            document.getElementById('probs'));
+        svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+            document.getElementById('cherlinks'));
+
+        if (useAdjustmentmode) {
+            var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
+                .insertAfter('body')
+                .css("padding-left", "20px")
+                .css("width", "250px")
+                .css("height", "250px");
+            adjustmentmode.addKeybindings(svo, markerIndex, adjOut);
+            svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
+                eid('adjust-out'));
+        }
+
+        $("#flip-button").click(function() {
+            svo.m_toggleVisible();
+            updateFlipButton();
+        });
+
+        // Notice if the user types a valid Wymer number in the #hash.
+        window.onhashchange = function() {
+            var id = location.hash.slice(1);
+            if (id && (id in markerIndex)) {
+                google.maps.event.trigger(
+                    markerIndex[id], "click");
+            }
+        };
+
+        $.fn.filterCheckBoxes = function(categories, options) {
+            var opts = $.extend({}, $.fn.filterCheckBoxes.defaults, options);
+
+            var contents = $.map(categories, function(cat) {
+                var input = $('<input type="checkbox" checked>')
+                .attr('name', opts.name)
+                .attr('value', cat).wrap('<label>').parent();
+                $('<span>').text(cat).appendTo(input);
+                return input.wrap('<p>').parent();
+            });
+            this.append(contents);
+            return this;
+        };
+
+
+        $.fn.filterCheckBoxes.defaults = {
+            name: 'filtertags',
+        };
+        var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
+        filterChecks.on('change', function() {
+            var selected = filterChecks.filter(':checked')
+                .map(function() { return this.value; })
+                .toArray();
+            updateFilteredMarkers(selected);
+        });
+        filterChecks.first().trigger('change');
+
+    }
+
+
+    function updateOverlayImageInfo(svo, image) {
+        svo.imageID = image.imageID;
+        svo.streetPt = new google.maps.LatLng(image.lat, image.lng);
+        svo.sheading = image.heading;
+        svo.imageDistance = image.image_distance;
+        svo.realImageHeight = image.height;
+        svo.realImageWidth = image.width;
+        svo.spitch = image.pitch;
+        svo.m_calcImagePoint()
+        svo.m_setImage(image.image_url, image['CAT Record URL']);
+    }
+
+
+    function updateFilteredMarkers(enabledCategories) {
+        $.each(imageList, function(i, image) {
+            var imgid = image.imageID;
+            if ($.inArray(image['Tag_1'], enabledCategories) > -1 ||
+                $.inArray(image['Tag_2'], enabledCategories) > -1) {
+                if (null === markerIndex[imgid].getMap()) {
+                    markerIndex[imgid].setMap(svo.map);
+                }
+                console.log('Kept ' + imgid);
+            } else {
+                markerIndex[imgid].setMap(null);
+                console.log('Removed ' + imgid);
+            }
+        });
+    }
+
+    initialize();
+
+});
