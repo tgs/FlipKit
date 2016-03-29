@@ -1,4 +1,4 @@
-define(['mousetrap', 'jquery'], function(mousetrap, $) {
+define(['mousetrap'], function(mousetrap) {
     // also depends on google maps, but only once the inner func gets called,
     // and I don't want to give the async callback twice
     function padToFour(number) {
@@ -8,21 +8,22 @@ define(['mousetrap', 'jquery'], function(mousetrap, $) {
 
     function wynum(s) { return +(s.slice(2)) }
 
-    function addKeybindings(svo, markerIndex) {
+    function addKeybindings(svo, markerIndex, outputDiv) {
         svo.map.setOptions({keyboardShortcuts: false});
         function up() {
             svo.m_calcImagePoint(); svo.m_updateMarker();
-            $('#adjust-out').text(
+            outputDiv.text(
                 JSON.stringify({
-                fixedHeading:  svo.sheading,
-                fixedPitch:    svo.spitch,
-                fixedDistance: svo.imageDistance,
-                imageID:       svo.imageID
-            },
-            function(key, val) {
-                return val.toFixed ? Number(val.toFixed(3)) : val;
-            },
-            2)).blur();
+                    fixedHeading:  svo.sheading,
+                    fixedPitch:    svo.spitch,
+                    fixedDistance: svo.imageDistance,
+                    imageID:       svo.imageID
+                },
+                function(key, val) {
+                    return val.toFixed ? Number(val.toFixed(3)) : val;
+                },
+                2)
+            ).blur();
         }
         Mousetrap.bind('a', function() { svo.imageDistance += 2; up(); });
         Mousetrap.bind('s', function() { svo.imageDistance -= 2; up(); });
@@ -50,11 +51,11 @@ define(['mousetrap', 'jquery'], function(mousetrap, $) {
         }
         Mousetrap.bind('n', function() {
             google.maps.event.trigger(markerIndex[nextImage(1)], "click");
-            $("#adjust-out").text("");
+            outputDiv.text("");
         });
         Mousetrap.bind('p', function() {
             google.maps.event.trigger(markerIndex[nextImage(-1)], "click");
-            $("#adjust-out").text("");
+            outputDiv.text("");
         });
     }
 

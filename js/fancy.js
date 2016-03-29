@@ -8,9 +8,6 @@ var markerIndex = {};
 var useAdjustmentmode = true;
 
 
-function addOutputTextArea() {
-}
-
 // the main application object
 // Many thanks to Team Maps.
 // SVO (Street View Overlay) modified from Team Maps example,
@@ -442,12 +439,12 @@ function initialize() {
         document.getElementById('cherlinks'));
 
     if (useAdjustmentmode) {
-        $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
+        var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
             .insertAfter('body')
             .css("padding-left", "20px")
             .css("width", "250px")
             .css("height", "250px");
-        adjustmentmode.addKeybindings(svo, markerIndex);
+        adjustmentmode.addKeybindings(svo, markerIndex, adjOut);
         svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
             eid('adjust-out'));
     }
