@@ -7,7 +7,7 @@ requirejs(
     var svo = null;
     var markerIndex = {};
 
-    var useAdjustmentmode = true;
+    var useAdjustmentmode = false;
 
     var eid = overlay.eid;
 
