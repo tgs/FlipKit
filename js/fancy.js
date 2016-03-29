@@ -167,24 +167,6 @@ requirejs(
             }
         };
 
-        $.fn.filterCheckBoxes = function(categories, options) {
-            var opts = $.extend({}, $.fn.filterCheckBoxes.defaults, options);
-
-            var contents = $.map(categories, function(cat) {
-                var input = $('<input type="checkbox" checked>')
-                .attr('name', opts.name)
-                .attr('value', cat).wrap('<label>').parent();
-                $('<span>').text(cat).appendTo(input);
-                return input.wrap('<p>').parent();
-            });
-            this.append(contents);
-            return this;
-        };
-
-
-        $.fn.filterCheckBoxes.defaults = {
-            name: 'filtertags',
-        };
         var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
         filterChecks.on('change', function() {
             var selected = filterChecks.filter(':checked')
@@ -195,6 +177,24 @@ requirejs(
         filterChecks.first().trigger('change');
 
     }
+
+    $.fn.filterCheckBoxes = function(categories, options) {
+        var opts = $.extend({}, $.fn.filterCheckBoxes.defaults, options);
+
+        var contents = $.map(categories, function(cat) {
+            var input = $('<input type="checkbox" checked>')
+            .attr('name', opts.name)
+            .attr('value', cat).wrap('<label>').parent();
+            $('<span>').text(cat).appendTo(input);
+            return input.wrap('<p>').parent();
+        });
+        this.append(contents);
+        return this;
+    };
+
+    $.fn.filterCheckBoxes.defaults = {
+        name: 'filtertags',
+    };
 
 
     function updateOverlayImageInfo(svo, image) {
