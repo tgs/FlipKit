@@ -16,7 +16,13 @@ dist/js/require.js: js/require.js
 	mkdir -p dist/js
 	cp js/require.js dist/js/
 
+js/imageList.js: dbwrangle/locations.json fresh-dbwrangle
+	(echo -n 'define({ imageList: '; cat dbwrangle/locations.json; echo '});') > js/imageList.js
+
+fresh-dbwrangle:
+	make -C dbwrangle
+
 clean:
 	rm -rf dist
 
-.PHONY: clean
+.PHONY: clean fresh-dbwrangle
