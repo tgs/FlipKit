@@ -107,4 +107,11 @@ for row in rows:
         print 'Problem with', row['OBJECTID'] + ":", str(skip)
         continue
 
+lengths = [
+    (len(row['TITLE']), row['TITLE'])
+    for row in rows_out
+]
+print "LONGEST CAPTION:"
+print max(lengths)
+
 json.dump(rows_out, open(sys.argv[2], 'w'), indent=2)

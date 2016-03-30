@@ -37,10 +37,7 @@ requirejs(
 
 
     function updateImageInfo(info) {
-        var infobox = $('#image-info').text(info);
-        infobox.toggleClass(
-            'overflew',
-            infobox.prop('scrollHeight') > infobox.prop('offsetHeight'));
+        $('#image-info').text(info);
     }
 
 
