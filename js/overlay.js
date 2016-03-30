@@ -86,8 +86,9 @@ define(
         var l_panOptions =
         {
             // zoomControl: false,
-            // linksControl: false
             addressControl: true,
+            linksControl: false,
+            clickToGo: false
         };
 
         //l_panOptions.position = this.streetPt;
