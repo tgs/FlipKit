@@ -86,8 +86,8 @@ define(
         var l_panOptions =
         {
             // zoomControl: false,
-            addressControl: true,
             linksControl: false,
+            addressControl: false,
             clickToGo: false
         };
 

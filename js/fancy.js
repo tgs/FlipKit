@@ -36,6 +36,14 @@ requirejs(
     }
 
 
+    function updateImageInfo(info) {
+        var infobox = $('#image-info').text(info);
+        infobox.toggleClass(
+            'overflew',
+            infobox.prop('scrollHeight') > infobox.prop('offsetHeight'));
+    }
+
+
     var engine = new UAParser().getEngine().name;
 
     function setPanoAndPov(options) {
@@ -91,6 +99,7 @@ requirejs(
                         svo.m_toggleVisible(true);
                         updateFlipButton();
                         updateShareButtons();
+                        updateImageInfo(image.TITLE);
                     } else {
                         console.log("Failed a try to get pano data");
                         if (giveUpNextTime) {
@@ -129,6 +138,8 @@ requirejs(
 
         google.maps.event.trigger(initMarker, "click");
 
+        svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
+            document.getElementById('image-info'));
         svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
             document.getElementById('flip-button'));
         svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
