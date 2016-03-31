@@ -1,11 +1,9 @@
-requirejs.config({
-    baseUrl: 'js',
-    paths: {
-        jquery: 'jquery-1.12.0.min',
-        mousetrap: 'mousetrap.min',
-        "ua-parser-js": "ua-parser.min",
-        imageList: 'imageList'
-    }
-});
+var fancy = require('./js/fancy.js')
+var GoogleMapsLoader = require('google-maps');
 
-requirejs(['fancy']);
+GoogleMapsLoader.KEY = 'AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk';
+GoogleMapsLoader.LIBRARIES = ['geometry'];
+
+GoogleMapsLoader.load(function(google) {
+    fancy.initialize(google);
+});

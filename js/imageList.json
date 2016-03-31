@@ -1,4 +1,4 @@
-define({ imageList: [
+[
   {
     "image_distance": 38, 
     "heading": 1.923, 
@@ -19943,4 +19943,4 @@ define({ imageList: [
     "pano": "7OjeJuJdOBkUnFhPLppXYg", 
     "CAT Record URL": "http://historydc.pastperfect-online.com/32595cgi/mweb.exe?request=record;id=D2CE9FC2-EE17-4B0A-AC7B-177546073571;type=102"
   }
-]});
+]

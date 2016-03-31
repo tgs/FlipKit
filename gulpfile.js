@@ -1,27 +1,19 @@
 var gulp = require("gulp");
 var concat = require('gulp-concat');
-var rjs = require('requirejs');
 var htmlReplace = require('gulp-html-replace');
+var browserify = require('browserify');
+var browserifyData = require('browserify-data');
+var source = require('vinyl-source-stream');
 
-rjs_config = {
-    baseUrl: 'js',
-    paths: {
-        jquery: 'jquery-1.12.0.min',
-        mousetrap: 'mousetrap.min',
-        "ua-parser-js": "ua-parser.min",
-        imageList: 'imageList',
-        requireLib: 'require'
-    },
-    include: ['requireLib'],
-    name: 'fancy',
-    out: 'dist/index.js'
-};
-
-gulp.task('scripts', function(cb){
-    rjs.optimize(rjs_config, function(buildResponse){
-        console.log('build response', buildResponse);
-        cb();
-    }, cb);
+gulp.task('browserify', function() {
+    return browserify()
+        .transform(browserifyData)
+        .add('./app.js')
+        .bundle()
+        //Pass desired output filename to vinyl-source-stream
+        .pipe(source('index.js'))
+        // Start piping stream to tasks!
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('htmlReplace', function(){
@@ -34,4 +26,4 @@ gulp.task('htmlReplace', function(){
 
 
     
-gulp.task('default', ['scripts', 'htmlReplace']);
+gulp.task('default', ['browserify', 'htmlReplace']);

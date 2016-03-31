@@ -4,11 +4,18 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
+    "browserify": "^13.0.0",
+    "browserify-data": "^0.2.0",
+    "google-maps": "^3.2.1",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-html-replace": "^1.5.5",
-    "requirejs": "^2.2.0"
+    "jquery": "^1.12.2",
+    "lunr": "^0.7.0",
+    "mousetrap": "^1.5.3",
+    "ua-parser-js": "^0.7.10",
+    "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
