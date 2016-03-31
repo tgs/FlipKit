@@ -8,7 +8,13 @@ define(['mousetrap'], function(mousetrap) {
 
     function wynum(s) { return +(s.slice(2)) }
 
-    function addKeybindings(svo, markerIndex, outputDiv) {
+
+    function addNormalKeybindings(svo) {
+        Mousetrap.bind('space', function() { svo.m_toggleVisible(); });
+    }
+
+
+    function addAdjustmentKeybindings(svo, markerIndex, outputDiv) {
         svo.map.setOptions({keyboardShortcuts: false});
         function up() {
             svo.m_calcImagePoint(); svo.m_updateMarker();
@@ -34,8 +40,6 @@ define(['mousetrap'], function(mousetrap) {
         Mousetrap.bind('right', function() { svo.sheading += 1; up(); });
         Mousetrap.bind('left',  function() { svo.sheading -= 1; up(); });
 
-        Mousetrap.bind('space', function() { svo.m_toggleVisible(); });
-
         function nextImage(direction) {
             var num = wynum(svo.imageID);
             var id = svo.imageID;
@@ -59,5 +63,8 @@ define(['mousetrap'], function(mousetrap) {
         });
     }
 
-    return { 'addKeybindings': addKeybindings };
+    return {
+        'addAdjustmentKeybindings': addAdjustmentKeybindings,
+        'addNormalKeybindings': addNormalKeybindings
+    };
 });

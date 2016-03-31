@@ -1,7 +1,7 @@
 requirejs(
-    ['mousetrap', 'ua-parser-js', 'imageList', 'jquery', 'adjustmentmode', 'overlay',
+    ['mousetrap', 'ua-parser-js', 'imageList', 'jquery', 'keybindings', 'overlay',
         'goog!maps,3,other_params:key=AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk&libraries=geometry'],
-    function(Mousetrap, UAParser, imageListContainer, $, adjustmentmode, overlay) {
+    function(Mousetrap, UAParser, imageListContainer, $, keybindings, overlay) {
 
     var imageList = imageListContainer.imageList;
     var svo = null;
@@ -156,10 +156,11 @@ requirejs(
                 .css("padding-left", "20px")
                 .css("width", "250px")
                 .css("height", "250px");
-            adjustmentmode.addKeybindings(svo, markerIndex, adjOut);
+            keybindings.addAdjustmentKeybindings(svo, markerIndex, adjOut);
             svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
                 eid('adjust-out'));
         }
+        keybindings.addNormalKeybindings(svo);
 
         $("#flip-button").click(function() {
             svo.m_toggleVisible();
