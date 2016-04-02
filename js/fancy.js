@@ -1,6 +1,7 @@
 var mousetrap = require('mousetrap');
 var UAParser = require('ua-parser-js');
 var $ = require('jquery');
+var stemmer = require('porter-stemmer').stemmer;
 var keybindings = require('./keybindings');
 var imageList = require('./imageList.json');
 var overlay = require('./overlay');
@@ -65,6 +66,7 @@ function initialize(google) {
     svo.m_initMap();
 
     var svService = new google.maps.StreetViewService();
+    addSearchTerms(imageList);
 
     var imageCategories = {};
 
@@ -182,12 +184,18 @@ function initialize(google) {
     };
 
     var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
-    filterChecks.on('change', function() {
+    var filterSearch = $("input#title-search");
+
+    function callUpdate() {
+        var search = filterSearch.val();
         var selected = filterChecks.filter(':checked')
             .map(function() { return this.value; })
             .toArray();
-        updateFilteredMarkers(selected);
-    });
+        updateFilteredMarkers(selected, search);
+    }
+
+    filterChecks.on('change', callUpdate);
+    filterSearch.on('change', callUpdate);
     filterChecks.first().trigger('change');
 
 }
@@ -225,20 +233,47 @@ function updateOverlayImageInfo(svo, image) {
 }
 
 
-function updateFilteredMarkers(enabledCategories) {
+function updateFilteredMarkers(enabledCategories, searchbox) {
+    var terms = tokenize(searchbox).map(function(item) { return stemmer(item); });
     $.each(imageList, function(i, image) {
         var imgid = image.imageID;
-        if ($.inArray(image['Tag_1'], enabledCategories) > -1 ||
-            $.inArray(image['Tag_2'], enabledCategories) > -1) {
+
+        var catEnabled = (
+            $.inArray(image['Tag_1'], enabledCategories) > -1 ||
+            $.inArray(image['Tag_2'], enabledCategories) > -1);
+        var textMatches = (terms === []) || terms.some(function (term) {
+            return (term.length === 0) || (term in image.terms);
+        });
+        if (catEnabled && textMatches) {
             if (null === markerIndex[imgid].getMap()) {
                 markerIndex[imgid].setMap(svo.map);
             }
-            console.log('Kept ' + imgid);
         } else {
             markerIndex[imgid].setMap(null);
-            console.log('Removed ' + imgid);
         }
     });
+}
+
+
+function tokenize(str) {
+    return str.toLowerCase().split(/\s/);
+}
+var stopwords = {
+    'a': 1,
+    'the': 1
+};
+
+function addSearchTerms(imageList) {
+    $.each(imageList, function(i, image) {
+        image.terms = {};
+        $.each(tokenize(image.TITLE), function(j, word) {
+            if (! stopwords.hasOwnProperty(word)) {
+                image.terms[stemmer(word)] = 1;
+            }
+        });
+    });
+
+    console.log(imageList[0]);
 }
 
 module.exports = { 'initialize': initialize };

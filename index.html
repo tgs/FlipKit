@@ -140,6 +140,7 @@
         margin-top: 1px;
       }
       #filtertags .title {
+        display: block;
         text-align: center;
         font-size: 110%;
         font-weight: bold;
@@ -162,7 +163,13 @@
     <div class="wymercontrol wymermapcontrol" id="wymerlink" style="position: absolute; right: -100000px;">
       <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
     </div>
-    <div class="wymercontrol wymermapcontrol" id="filtertags"><p class="title">
+    <div class="wymercontrol wymermapcontrol" id="filtertags">
+      <label class="title" for="title-search">
+      Search Descriptions
+      </label>
+      <p class="search">
+    <input id="title-search"></input></p>
+      <p class="title">
       Filter Images
     </p></div>
     <div id="map">
