@@ -22,7 +22,8 @@ function SVO()
     // The image is placed at a point in space, which is this many meters
     // away from the *initial* street point, in the 'sheading' direction.
     this.imageDistance = 40;
-    this.image = "collection/800/WY%200003.jpg";
+    this.defaultImage = "img/nothing.png";  // a clear pixel
+    this.image = this.defaultImage;
 
     this.streetPt = new google.maps.LatLng(this.slat, this.slng);
     this.m_calcImagePoint();
@@ -85,9 +86,9 @@ SVO.prototype.m_initPanorama = function ()
     var l_panOptions =
     {
         // zoomControl: false,
-        linksControl: false,
+        //linksControl: false,
         addressControl: false,
-        clickToGo: false
+        //clickToGo: false
     };
 
     //l_panOptions.position = this.streetPt;
@@ -102,8 +103,7 @@ SVO.prototype.m_initPanorama = function ()
 
     this.map.setStreetView(pan);
 
-    // event handlers    
-    // TODO: add resize listener
+    // event handlers
     function addEventHandlers(svo) {
         // 'this' gets rebound, so we need to capture the SVO
         google.maps.event.addListener(pan, 'pov_changed', function ()
@@ -113,14 +113,6 @@ SVO.prototype.m_initPanorama = function ()
 
         google.maps.event.addListener(pan, 'zoom_changed', function ()
         {
-            svo.m_updateMarker();
-        });
-
-        google.maps.event.addListener(pan, 'position_changed', function ()
-        {
-            svo.streetPt = pan.getPosition();
-            svo.map.setCenter(svo.streetPt);
-
             svo.m_updateMarker();
         });
     }
@@ -187,7 +179,12 @@ SVO.prototype.m_toggleVisible = function(visible)
 
 SVO.prototype.m_setImage = function(image, infoUrl)
 {
-    this.image = image;
+    if (image === null) {
+        this.image = this.defaultImage;
+        infoUrl = location.href;
+    } else {
+        this.image = image;
+    }
     var l_iconDiv = eid("marker");
     l_iconDiv.innerHTML = "<a target='_blank' href='" + infoUrl + "'><img src='" + this.image + "' width='100%' height='100%' alt='' /></a>";
 }

@@ -5,6 +5,7 @@ var stemmer = require('porter-stemmer').stemmer;
 var keybindings = require('./keybindings');
 var imageList = require('./imageList.json');
 var overlay = require('./overlay');
+var closeness = require('./closeness');
 var GoogleMapsLoader = require('google-maps'); // only for common js environments 
  
 
@@ -140,6 +141,32 @@ function initialize(google) {
     svo.m_initPanorama();
     svo.m_initMarker();
 
+    google.maps.event.addListener(svo.pan, 'position_changed', function ()
+    {
+        var newPos = svo.pan.getPosition();
+        svo.map.setCenter(newPos);
+
+        updateImageSpots(
+            closeness.findPointsWithin(
+                {lat: newPos.lat(), lng: newPos.lng()}, imageList, 100));
+
+        // TODO: reuse the list of close points we got earlier
+        var imageToShow = closeness.findClosePoint(
+            {lat: newPos.lat(), lng: newPos.lng()}, imageList, 10);
+        if (imageToShow === null) {
+            svo.m_setImage(null, null);
+            svo.m_toggleVisible(false);
+            updateFlipButton();
+        } else {
+            updateOverlayImageInfo(svo, imageToShow);
+            svo.streetPt = svo.pan.getPosition();
+            svo.m_toggleVisible(true);
+            updateFlipButton();
+        }
+
+        svo.m_updateMarker();
+    });
+
     google.maps.event.trigger(initMarker, "click");
 
     svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
@@ -217,6 +244,32 @@ $.fn.filterCheckBoxes = function(categories, options) {
 $.fn.filterCheckBoxes.defaults = {
     name: 'filtertags',
 };
+
+
+var currentImageSpots = [];
+
+function updateImageSpots(imageRecs) {
+    // obliterate the old ones, disconnecting so we can GC them
+    currentImageSpots.forEach(function(marker) {
+        marker.setMap(null);
+        google.maps.event.clearInstanceListeners(marker);
+    });
+    currentImageSpots.splice(0, currentImageSpots.length);
+
+    // make new ones for our new location
+    imageRecs.forEach(function(record) {
+        var image = record.point;
+        var marker = new google.maps.Marker({
+            position: {lat: image.lat, lng: image.lng},
+            map: svo.pan
+        });
+
+        marker.addListener('click', function() {
+            google.maps.event.trigger(markerIndex[image.imageID], 'click');
+        });
+        currentImageSpots.push(marker);
+    });
+}
 
 
 function updateOverlayImageInfo(svo, image) {

@@ -5,12 +5,24 @@ var metersPerDegreeLat = 111035;
 // rather than exactly within 10 meters.
 
 function findClosePoint(queryPoint, points, metersRadius) {
-    // return the closest point, if any is within the radius.  Approximately.
+    // return the closest point, if any is within the radius.
+    var closePoints = findPointsWithin(queryPoint, points, metersRadius);
+    var closest = closePoints.reduce(function(best, pt) {
+        if (best === null || pt.dist < best.dist) {
+            return pt;
+        }
+        return best;
+    }, null);
+    return closest === null ? null : closest.point;
+}
+
+function findPointsWithin(queryPoint, points, metersRadius) {
+    // return all points within the radius, and their distances
     var lngRadius = metersRadius / metersPerDegreeLng,
         latRadius = metersRadius / metersPerDegreeLat,
         queryPointObject = new google.maps.LatLng(queryPoint.lat, queryPoint.lng);
 
-    return points.reduce(function(prevBest, comparePoint) {
+    var closePoints = points.reduce(function(soFar, comparePoint) {
         if (Math.abs(comparePoint.lat - queryPoint.lat) < latRadius &&
             Math.abs(comparePoint.lng - queryPoint.lng) < lngRadius) {
 
@@ -19,17 +31,20 @@ function findClosePoint(queryPoint, points, metersRadius) {
             var realDistance = google.maps.geometry.spherical.computeDistanceBetween(
                 queryPointObject, comparePointObject);
 
-            if (prevBest === null || realDistance < prevBest.dist) {
-                return {
+            if (realDistance < metersRadius) {
+                soFar.push({
                     dist: realDistance,
                     point: comparePoint
-                };
+                });
             }
         }
-        return prevBest;
-    }, null);
+        return soFar;
+    }, []);
+
+    return closePoints;
 }
 
 module.exports = {
-    'findClosePoint': findClosePoint
+    'findClosePoint': findClosePoint,
+    'findPointsWithin': findPointsWithin
 }
