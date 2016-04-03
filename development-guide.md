@@ -126,5 +126,9 @@ order to use the Google Maps API, you will need to run a web server
 here.  If you have Python installed, you can use `python2 -m
 SimpleHTTPServer` or `python3 -m http.server`.  Otherwise, Node
 certainly has web servers, for example the `gulp-webserver` package.
-You will probably find it useful to disable the Uglify step during
-development (or maybe source maps work for you?).
+At this point, you should be able to visit `http://localhost:8080/` (or
+whatever address you've had the dev server listen on) and see a demo
+version of the web site.
+
+Once that works, you can begin replacing the demo image data with your
+own
