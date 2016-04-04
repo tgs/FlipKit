@@ -8,9 +8,12 @@
 
 
 TODO FOR ME:
-* Make the site behave gracefully if some data's missing!
+* Make the site behave gracefully if some data's missing!  E.g. tags,
+  labels.  Maybe concat tags 1 & 2 in python.
 * Include an API key that's just OK for localhost
-* Make a good place to keep the API key?
+* Make a good place to keep the API key?  Config.js?
+* Remove dependencies on 'WY 1234' format from JS files, only deal in
+  imageID strings
 
 
 Initial Together Tasks:

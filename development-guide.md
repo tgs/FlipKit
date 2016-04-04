@@ -131,4 +131,23 @@ whatever address you've had the dev server listen on) and see a demo
 version of the web site.
 
 Once that works, you can begin replacing the demo image data with your
-own
+own.
+
+### Getting started adding your own image data
+
+Start with a few images.  Make sure they are reasonably-sized JPEG
+files, and put them in `collection/800`.  The filenames should be be the
+*identity or accession number* discussed earlier, with a lower-case
+`.jpg` extension.
+
+Make a spreadsheet with exactly these column names: `imageID`, `TITLE`,
+`MAPS URL`, `Tag 1`, `Tag 2`, `Refined Position`, and `CAT Record URL`.
+You can change the names, but it's probably best to start with these and
+get it working first - you'll need to change various parts of the code
+too.  At first, it's fine if all of the columns except `imageID` and
+`MAPS URL` are empty.  Save the spreadsheet as a CSV file, and copy
+that file to `dbwrangle/current.csv`.  Change to the `dbwrangle`
+directory and run `make`.  Two things should happen: the `identify`
+program should collect information about all the images in
+`collection/800`, and the spreadsheet should get converted into a file
+called `locations.json`.  

@@ -20,13 +20,14 @@ from pctry import parse_streetview_url
 # We take this subset of the input columns before moving on.
 INTERESTING_COLUMNS = [
     'OBJECTID',
+    'imageID',
     'TITLE',
     'MAPS URL',  # Rows missing this column will be skipped.
     'Notes',
     'CAT Record URL',
     'Tag 1',
     'Tag 2',
-    'Refined Position'
+    'Refined Position',
 ]
 
 
@@ -48,12 +49,20 @@ def add_image_url(row):
     Some images don't have a scan there, some have more than one!  Skip the
     ones with no scan, try to choose the best one if there's more.
     """
+    if row.get('image_url'):
+        # Already done!
+        return
 
-    # This is a detail of the Wymer's DC image naming - stuff after the . can
-    # be skipped
-    accession = row['OBJECTID']
-    if '.' in accession:
-        accession = accession.rsplit('.')[0]
+    if 'OBJECTID' in row:
+        # Wymer's DC has image names that are weird.  If you name yours
+        # exactly the imageID.jpg, this will be simpler!
+        accession = row['OBJECTID']
+        if '.' in accession:
+            accession = accession.rsplit('.')[0]
+    else:
+        accession = row.get('imageID')
+        if not accession:
+            raise SkipRow("Row is missing both imageID and OBJECTID")
 
     # Look in the image directory for this image
     try_path = os.path.join(os.getcwd(), '..', 'collection', '800',
@@ -120,7 +129,9 @@ rows_out = []
 for row in rows:
     try:
         subset_columns(row)
-        row['imageID'] = row['OBJECTID'][0:2] + row['OBJECTID'][3:7]
+        # For Wymer's DC the image ID is a subset of the OBJECTID column
+        if 'imageID' not in row:
+            row['imageID'] = row['OBJECTID'][0:2] + row['OBJECTID'][3:7]
         parse_maps_url_to_fields(row)
         add_image_url(row)
         refine_image_position(row)

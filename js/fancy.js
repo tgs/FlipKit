@@ -311,6 +311,9 @@ function updateFilteredMarkers(enabledCategories, searchbox) {
 function tokenize(str) {
     return str.toLowerCase().split(/\s/);
 }
+// TODO:
+//   I -> eye (I street)
+//   more stopwords
 var stopwords = {
     'a': 1,
     'the': 1
