@@ -79,8 +79,8 @@ function initialize(google) {
             title: image.TITLE
         });
         markerIndex[image.imageID] = marker;
-        imageCategories[image.Tag_1] = 1;
-        imageCategories[image.Tag_2] = 1;
+        imageCategories[image['Tag 1']] = 1;
+        imageCategories[image['Tag 2']] = 1;
 
         marker.addListener('click', function() {
             var giveUpNextTime = false;
@@ -292,8 +292,8 @@ function updateFilteredMarkers(enabledCategories, searchbox) {
         var imgid = image.imageID;
 
         var catEnabled = (
-            $.inArray(image['Tag_1'], enabledCategories) > -1 ||
-            $.inArray(image['Tag_2'], enabledCategories) > -1);
+            $.inArray(image['Tag 1'], enabledCategories) > -1 ||
+            $.inArray(image['Tag 2'], enabledCategories) > -1);
         var textMatches = (terms === []) || terms.some(function (term) {
             return (term.length === 0) || (term in image.terms);
         });

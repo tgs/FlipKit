@@ -7,12 +7,14 @@ Convert a CSV of raw data into imageList.json
 * Generate some others based on them
 """
 
+from __future__ import print_function
+import ast
 import csv
 import json
 import sys
 import os
 import glob
-from pctry import whole_url
+from pctry import parse_streetview_url
 
 
 # We take this subset of the input columns before moving on.
@@ -46,6 +48,7 @@ def add_image_url(row):
     Some images don't have a scan there, some have more than one!  Skip the
     ones with no scan, try to choose the best one if there's more.
     """
+
     # This is a detail of the Wymer's DC image naming - stuff after the . can
     # be skipped
     accession = row['OBJECTID']
@@ -60,35 +63,27 @@ def add_image_url(row):
     if matches:
         matches = sorted(matches, key=len)
         if len(matches) > 1:
-            print "Several matches, choosing last:", matches
+            print("Several matches, choosing last:", matches)
         row['image_url'] = os.path.relpath(matches[-1], start='..')
     else:
         raise SkipRow("Couldn't find image")
 
 
-sillyname_nicename = {
-    '1s': 'pano',
-    'lat': 'lat',
-    'lng': 'lng',
-    'h': 'heading',
-    't': 'pitch_from_down',
-    'a': 'a', # ??
-    'y': 'y', # ??
-}
-
 def parse_maps_url_to_fields(row):
     if not row['MAPS URL']:
-        raise SkipRow("No maps_url")
-    if 'historydc' in row['MAPS URL']:
+        raise SkipRow("No MAPS URL")
+    if 'google' not in row['MAPS URL']:
         raise SkipRow("MAPS URL looks wrong")
 
-    parse = whole_url.parse_string(row['MAPS URL'])
-
-    for silly, nice in sillyname_nicename.items():
-        row[nice] = parse.get(silly, '')
+    row.update(parse_streetview_url(row['MAPS URL']))
 
 
-def locate_image(row):
+def refine_image_position(row):
+    """
+    Use the JSON data copy/pasted into the spreadsheet to update image orientation.
+
+    The FlipKit front-end makes this
+    """
     refined_raw = row['Refined Position'].strip()
 
     row['image_distance'] = 40
@@ -98,27 +93,24 @@ def locate_image(row):
         try:
             refined = json.loads(refined_raw)
         except ValueError as e:
-            print "This is not JSON:", repr(row['Refined Position'])
-            return
+            raise SkipRow("This is not JSON: " + repr(row['Refined Position']))
 
         if row['imageID'] != refined['imageID']:
-            print 'BADDDDDDDDDDDDDDDD', row['imageID'] + ' != ' + refined['imageID']
-            return
+            raise SkipRow('Refined Position pasted into wrong row! ' +
+                          row['imageID'] + ' != ' + refined['imageID'])
 
         row['heading'] = refined['fixedHeading']
         row['pitch'] = refined['fixedPitch']
         row['image_distance'] = refined['fixedDistance']
-        #print "Refined", row['imageID']
 
 
-import ast
-image_dims = ast.literal_eval(open('../collection/image-info').read())
+# The 'image-info' file is made by the Makefile using Image/GraphicsMagick
+image_dims = ast.literal_eval(open('image-info').read())
 def add_image_dimensions(row):
+    "Add image height and width to make the front-end's life easier"
     basename = os.path.basename(row['image_url'])
     row.update(image_dims[basename])
     d = image_dims[basename]
-    if d['height'] > d['width']:
-        print row['OBJECTID'], "looks like it's portrait"
 
 
 rows = csv.DictReader(open(sys.argv[1]))
@@ -129,27 +121,25 @@ for row in rows:
     try:
         subset_columns(row)
         row['imageID'] = row['OBJECTID'][0:2] + row['OBJECTID'][3:7]
-        add_image_url(row)
         parse_maps_url_to_fields(row)
-        locate_image(row)
+        add_image_url(row)
+        refine_image_position(row)
         add_image_dimensions(row)
 
         del row['MAPS URL']
         del row['Refined Position']
-        del row['a']
-        del row['y']
         del row['pitch_from_down']
 
         rows_out.append(row)
     except SkipRow as skip:
-        print 'Problem with', row['OBJECTID'] + ":", str(skip)
+        print('Problem with', row['OBJECTID'] + ":", str(skip))
         continue
 
 lengths = [
     (len(row['TITLE']), row['TITLE'])
     for row in rows_out
 ]
-print "LONGEST CAPTION:"
-print max(lengths)
+print("LONGEST CAPTION:")
+print(max(lengths))
 
 json.dump(rows_out, open(sys.argv[2], 'w'), indent=2, sort_keys=True)
