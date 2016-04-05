@@ -146,8 +146,76 @@ You can change the names, but it's probably best to start with these and
 get it working first - you'll need to change various parts of the code
 too.  At first, it's fine if all of the columns except `imageID` and
 `MAPS URL` are empty.  Save the spreadsheet as a CSV file, and copy
-that file to `dbwrangle/current.csv`.  Change to the `dbwrangle`
-directory and run `make`.  Two things should happen: the `identify`
-program should collect information about all the images in
-`collection/800`, and the spreadsheet should get converted into a file
-called `locations.json`.  
+that file to `dbwrangle/current.csv`.
+
+Change to the `dbwrangle` directory and run these commands:
+
+```
+virtualenv ./env
+source ./env/bin/activate
+pip install -r requirements.txt
+make
+```
+
+Two things should happen: the `identify` program should collect
+information about all the images in `collection/800`, and the
+spreadsheet should get converted into a file called `locations.json`.
+If you copy this file to `js/imageList.json` and run the `gulp` command
+again, the web site should get built with your images!
+
+It is very likely that you will need to edit
+`dbwrangle/make-json-url-db.py` at some point - it is the most direct
+interface with the spreadsheet/database.  Your data format will probably
+be different from the one we used for Wymer's DC in some way or another.
+
+### Putting your version of the web site online for the first time
+
+Google Maps requires an API key before it can be used in many
+situations.  FlipKit is distributed with an API key that allows use on
+'localhost', but not anywhere else.  So you will need to change line
+four of `app.js` to read `GoogleMapsLoader.KEY = 'your key here!'`.
+
+After rebuilding the site with Gulp, you should be able to put
+everything in the `dist` directory onto a web server and have it work
+correctly!  This completes the first "iteration" - you have touched
+almost all of the major components of the project, and you have
+something to show off.
+
+## Fine-tuning the positioning of the images
+
+FlipKit thinks of images as being anchored by the Street View point that
+produces a similar view.  FlipKit includes an "adjustment mode" that
+allows you to fine-tune the orientation of each image in Street View.
+You can activate it by setting the variable `useAdjustmentMode` to
+`true` in `js/fancy.js` and re-building the web site with `gulp`.  When
+adjustment mode is active, you can use the following keys to control the
+view:
+
+* `a`: make the image bigger
+* `s`: make the image smaller
+* up-arrow: move the image up
+* down-arrow: move the image down
+* left-arrow: move the image left
+* right-arrow: move the image right
+* space: flip the historical image on and off
+* `n`: change to the next image by `imageID`
+* `p`: change to the previous image
+
+When you press one of the keys that manipulates the image's position,
+some JSON text appears in the white box on the left side of the screen.
+If you copy and paste this text into the `Refined Position` column of
+the spreadsheet, then rebuild the `imageList.json` file and the web
+site, then the image will appear at its adjusted position from then on.
+
+## Conclusion
+
+This has been an overview of all of the technical tasks that you will
+need to do to put together a web site similar to Wymer's DC.  If
+something doesn't work and you can't figure out why, feel free to open
+an issue ticket on the FlipKit GitHub project,
+<https://github.com/tgs/flipkit/>.  The newest version of this
+development guide will always be available at
+<https://github.com/tgs/flipkit/blob/master/development-guide.md>.
+Contributions to increase the generality of the data processing, or add
+interesting features, would always be welcome.  Thanks and happy
+hacking!
