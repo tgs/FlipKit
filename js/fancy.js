@@ -188,8 +188,8 @@ function initialize(google) {
         var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
             .insertAfter('body')
             .css("padding-left", "20px")
-            .css("width", "250px")
-            .css("height", "250px");
+            .css("width", "150px")
+            .css("height", "200px");
         keybindings.addAdjustmentKeybindings(svo, markerIndex, adjOut);
         svo.map.controls[google.maps.ControlPosition.LEFT_TOP].push(
             eid('adjust-out'));
