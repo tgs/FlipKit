@@ -14,7 +14,7 @@ var GoogleMapsLoader = require('google-maps'); // only for common js environment
 var svo = null;
 var markerIndex = {};
 
-var useAdjustmentmode = false;
+var useAdjustmentMode = true;
 
 var eid = overlay.eid;
 
@@ -184,7 +184,7 @@ function initialize(google) {
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         document.getElementById('cherlinks'));
 
-    if (useAdjustmentmode) {
+    if (useAdjustmentMode) {
         var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
             .insertAfter('body')
             .css("padding-left", "20px")
