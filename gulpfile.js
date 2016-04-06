@@ -10,7 +10,7 @@ var buffer = require('vinyl-buffer');
 gulp.task('browserify', function() {
     return browserify()
         .transform(browserifyData)
-        .add('./app.js')
+        .add('./app/index.js')
         .bundle()
         //Pass desired output filename to vinyl-source-stream
         .pipe(source('index.js'))
@@ -23,7 +23,7 @@ gulp.task('browserify', function() {
 gulp.task('browserifyFixPos', function() {
     return browserify()
         .transform(browserifyData)
-        .add('./fixPos.js')
+        .add('./app/fixPos.js')
         .bundle()
         //Pass desired output filename to vinyl-source-stream
         .pipe(source('fixPos.js'))
@@ -33,10 +33,7 @@ gulp.task('browserifyFixPos', function() {
 });
 
 gulp.task('htmlReplace', function(){
-    return gulp.src('index.html')
-        .pipe(htmlReplace({
-            'amdbuild' : 'index.js'
-        }))
+    return gulp.src('app/*.html')
         .pipe(gulp.dest('dist'));
 });
 
