@@ -87,7 +87,7 @@ def parse_maps_url_to_fields(row):
     row.update(parse_streetview_url(row['MAPS URL']))
 
 
-def refine_image_position(row):
+def refine_image_orientation(row):
     """
     Use the JSON data copy/pasted into the spreadsheet to update image orientation.
 
@@ -122,6 +122,28 @@ def add_image_dimensions(row):
     d = image_dims[basename]
 
 
+FIXES = {}
+
+if os.path.exists('fixes.json'):
+    with open('fixes.json') as fixes_fh:
+        fixes_list = json.load(fixes_fh)
+        FIXES = dict((fix['imageID'], fix) for fix in fixes_list)
+
+
+def fix_image_location(row):
+    fix = FIXES.get(row['imageID'], None)
+    if fix:
+        if fix['found']:
+            assert fix['pano'] == row['pano'], "think harder before updating pano IDs pls"
+            row.update(fix['latLng'])  # Set lat and lng
+            if fix['distance'] > 5:
+                print('Updated position of', row['imageID'], 'by', fix['distance'])
+        else:
+            print(row['imageID'], "has obsolete panorama ID? :(")
+
+
+
+
 rows = csv.DictReader(open(sys.argv[1]))
 rows_out = []
 
@@ -134,7 +156,8 @@ for row in rows:
             row['imageID'] = row['OBJECTID'][0:2] + row['OBJECTID'][3:7]
         parse_maps_url_to_fields(row)
         add_image_url(row)
-        refine_image_position(row)
+        refine_image_orientation(row)
+        fix_image_location(row)
         add_image_dimensions(row)
 
         del row['MAPS URL']

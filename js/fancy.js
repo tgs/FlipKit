@@ -143,16 +143,15 @@ function initialize(google) {
 
     google.maps.event.addListener(svo.pan, 'position_changed', function ()
     {
-        var newPos = svo.pan.getPosition();
+        var newPos = svo.pan.getPosition(),
+            location = {lat: newPos.lat(), lng: newPos.lng()};
         svo.map.setCenter(newPos);
 
         updateImageSpots(
-            closeness.findPointsWithin(
-                {lat: newPos.lat(), lng: newPos.lng()}, imageList, 100));
+            closeness.findPointsWithin(location, imageList, 100));
 
         // TODO: reuse the list of close points we got earlier
-        var imageToShow = closeness.findClosePoint(
-            {lat: newPos.lat(), lng: newPos.lng()}, imageList, 10);
+        var imageToShow = closeness.findClosePoint(location , imageList, 10);
         if (imageToShow === null) {
             svo.m_setImage(null, null);
             svo.m_toggleVisible(false);
@@ -328,8 +327,6 @@ function addSearchTerms(imageList) {
             }
         });
     });
-
-    console.log(imageList[0]);
 }
 
 module.exports = { 'initialize': initialize };

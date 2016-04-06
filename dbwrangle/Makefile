@@ -1,4 +1,4 @@
-locations.json: current.csv make-json-url-db.py pctry.py image-info
+locations.json: current.csv make-json-url-db.py pctry.py image-info fixes.json
 	./make-json-url-db.py "$<" $@
 
 image-info: Makefile ../collection/800/*.jpg
