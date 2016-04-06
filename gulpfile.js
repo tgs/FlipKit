@@ -20,6 +20,18 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('browserifyFixPos', function() {
+    return browserify()
+        .transform(browserifyData)
+        .add('./fixPos.js')
+        .bundle()
+        //Pass desired output filename to vinyl-source-stream
+        .pipe(source('fixPos.js'))
+        .pipe(buffer())
+        // Start piping stream to tasks!
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('htmlReplace', function(){
     return gulp.src('index.html')
         .pipe(htmlReplace({
@@ -30,7 +42,8 @@ gulp.task('htmlReplace', function(){
 
 gulp.task('watch', function(){
     gulp.watch(['app.js', 'js/*'], ['browserify']);
+    gulp.watch(['fixPos.js', 'js/*'], ['browserifyFixPos']);
     gulp.watch(['index.html'], ['htmlReplace']);
 });
     
-gulp.task('default', ['browserify', 'htmlReplace']);
+gulp.task('default', ['browserify', 'htmlReplace', 'browserifyFixPos']);
