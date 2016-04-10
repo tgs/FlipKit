@@ -1,7 +1,11 @@
-casper.test.begin('Google search retrieves 10 or more results', function suite(test) {
+casper.test.begin('Wymer\'s DC', function suite(test) {
     casper.start("http://localhost:8080/", function() {
-        test.assertTitle("Map - Wymer's DC");
-        test.assertElementCount('div#filtertags p', 10);
+        test.begin("WDC search + filter", function(test) {
+            test.assertTitle("Map - Wymer's DC");
+            test.assertElementCount('div#filtertags p', 10);
+            test.assertSelectorHasText('div#filtertags', 'Search Descriptions');
+            test.done();
+        });
     });
 
     /*casper.then(function() {

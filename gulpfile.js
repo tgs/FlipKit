@@ -8,8 +8,15 @@ var uglify = require('gulp-uglify');
 var buffer = require('vinyl-buffer');
 var spawn = require('child_process').spawn,
     gutil = require('gulp-util');
+var mocha = require('gulp-mocha');
 
-gulp.task('test', function () {
+gulp.task('mocha', function() {
+    return gulp.src('test/search.js', {read: false})
+    // gulp-mocha needs filepaths so you can't have any plugins before it
+        .pipe(mocha({reporter: 'nyan'}));
+});
+
+gulp.task('casper', function () {
     var tests = ['test/test_it_loads.js'];
 
     var casperChild = spawn('node_modules/.bin/casperjs', ['test'].concat(tests), {'stdio': 'inherit'});
@@ -71,3 +78,4 @@ gulp.task('dist', ['distJs', 'distHtml']);
 
     
 gulp.task('default', ['browserify', 'copyHtml', 'browserifyFixPos']);
+gulp.task('test', ['casper', 'mocha']);
