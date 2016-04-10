@@ -1,7 +1,9 @@
 var stemmer = require('porter-stemmer').stemmer;
 
-function filtrate(collection, fields) {
+function filtrate(collection, fields, tagFields) {
+    // Construct the index
     var index = collection.map(function(item) {
+        // I'm guessing it's ok to keep tags and terms in the same place
         var terms = {};
         var termList = [].concat.apply(
             [],
@@ -9,6 +11,8 @@ function filtrate(collection, fields) {
                 return normalize(item[field]);
             })
         );
+        termList = termList.concat(tagFields.map(
+            function(tagField) { return item[tagField]; }));
         termList.forEach(function(term) {
             if (! stopwords.hasOwnProperty(term)) {
                 terms[term] = 1;
@@ -17,14 +21,15 @@ function filtrate(collection, fields) {
         return terms;
     });
     var result = {};
-    result.find = function(query, ifMatch, ifNoMatch) {
+
+    result.find = function(query, tags, ifMatch, ifNoMatch) {
         if (ifMatch === undefined) {
             ifMatch = function() {};
         }
         if (ifNoMatch === undefined) {
             ifNoMatch = function() {};
         }
-        var terms = normalize(query);
+        var terms = normalize(query).concat(tags);
         index.forEach(function(termsPresent, index) {
             var isMatch = (terms === []) || terms.every(function (term) {
                 return (term.length === 0) || (term in termsPresent);

@@ -3,24 +3,34 @@ var filtrate = require('../app/js/filtrate.js');
 var assert = require('assert');
 
 var exampleData = [
-    {name: 'Disco', species: 'dog', favoriteFoods: 'cheese'},
-    {name: 'Paige', species: 'dog', favoriteFoods: 'chicken'},
-    {name: 'Thomas', species: 'human', favoriteFoods: 'artichokes cheese'}
+    {name: 'Disco', species: 'dog', favoriteFoods: 'cheese', favoriteColor: 'color blind'},
+    {name: 'Paige', species: 'dog', favoriteFoods: 'chicken', favoriteColor: 'color blind'},
+    {name: 'Thomas', species: 'human', favoriteFoods: 'artichokes cheese', favoriteColor: 'green'}
 ]
 
 describe('filtrate', function() {
     describe('#filtrate()', function() {
-        var filt = filtrate.filtrate(exampleData, ['name', 'species', 'favoriteFoods']);
+        var filt = filtrate.filtrate(exampleData,
+                                     ['name', 'species', 'favoriteFoods'],
+                                     ['favoriteColor']);
 
         it('should call the callback when it finds results', function() {
             var res = [];
-            filt.find('dog', function (item) { res.push(item) });
+            filt.find('dog', [], function (item) { res.push(item) });
             assert.deepEqual(res, [exampleData[0], exampleData[1]]);
         });
         it('should require all terms to match', function() {
             var res = [];
-            filt.find('dog cheese', function (item) { res.push(item) });
+            filt.find('dog cheese', [], function (item) { res.push(item) });
             assert.deepEqual(res, [exampleData[0]]);
+        });
+        it('should not tokenize special fields', function() {
+            var res = [];
+            filt.find('', ['color'], function (item) { res.push(item) });
+            assert.deepEqual(res, []);
+
+            filt.find('', ['color blind'], function (item) { res.push(item) });
+            assert.deepEqual(res, [exampleData[0], exampleData[1]]);
         });
     });
 
