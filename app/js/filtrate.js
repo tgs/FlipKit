@@ -54,7 +54,11 @@ function filtrate(collection, fields, tagFields) {
 }
 
 function normalize(str) {
-    return tokenize(str).map(stemmer); //function(item) { return stemmer(item); });
+    if (str) {
+        return tokenize(str).map(stemmer);
+    } else {
+        return '';
+    }
 }
 
 function tokenize(str) {

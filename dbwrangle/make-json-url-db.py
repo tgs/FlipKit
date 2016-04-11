@@ -22,6 +22,7 @@ INTERESTING_COLUMNS = [
     'OBJECTID',
     'imageID',
     'TITLE',
+    # TODO: DATE - '10/10/1948' ----> '10/10/1948', 'october', '10/1948', '1948'
     'STERMS',
     'MAPS URL',  # Rows missing this column will be skipped.
     'Notes',
@@ -130,7 +131,6 @@ if os.path.exists('fixes.json'):
         fixes_list = json.load(fixes_fh)
         FIXES = dict((fix['imageID'], fix) for fix in fixes_list)
 
-
 def fix_image_location(row):
     fix = FIXES.get(row['imageID'], None)
     if fix:
@@ -143,6 +143,20 @@ def fix_image_location(row):
             print(row['imageID'], "has obsolete panorama ID? :(")
 
 
+EXTRA_SEARCH_TERMS = {}
+
+if os.path.exists('extra-search-terms.csv'):
+    with open('extra-search-terms.csv') as terms_fh:
+        for row in csv.DictReader(terms_fh):
+            EXTRA_SEARCH_TERMS[row['OBJECTID'][0:2] + row['OBJECTID'][3:7]] = {
+                'area': 'area' + row['OBJECTID'][8:],
+                'CLASSES': row['CLASSES'],
+            }
+
+def add_extra_search_terms(row):
+    extra = EXTRA_SEARCH_TERMS.get(row['imageID'], None)
+    if extra:
+        row.update(extra)
 
 
 rows = csv.DictReader(open(sys.argv[1]))
@@ -160,6 +174,7 @@ for row in rows:
         refine_image_orientation(row)
         fix_image_location(row)
         add_image_dimensions(row)
+        add_extra_search_terms(row)
 
         del row['MAPS URL']
         del row['Refined Position']

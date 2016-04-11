@@ -209,7 +209,11 @@ function initialize(google) {
     };
 
     var markerFilter = filtrate.filtrate(imageList,
-                                         ['TITLE', 'STERMS'],
+                                         ['TITLE', 'STERMS',
+                                             // 'DATE', // TODO
+                                             'area', 'CLASSES',
+                                             'imageID',
+                                         ],
                                          ['Tag 1', 'Tag 2']);
 
     var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
