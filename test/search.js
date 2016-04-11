@@ -24,7 +24,7 @@ describe('filtrate', function() {
             filt.find('dog cheese', [], function (item) { res.push(item) });
             assert.deepEqual(res, [exampleData[0]]);
         });
-        it('should not tokenize special fields', function() {
+        it('should not tokenize tags', function() {
             var res = [];
             filt.find('', ['color'], function (item) { res.push(item) });
             assert.deepEqual(res, []);

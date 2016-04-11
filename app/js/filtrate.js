@@ -11,14 +11,17 @@ function filtrate(collection, fields, tagFields) {
                 return normalize(item[field]);
             })
         );
-        termList = termList.concat(tagFields.map(
-            function(tagField) { return item[tagField]; }));
         termList.forEach(function(term) {
             if (! stopwords.hasOwnProperty(term)) {
                 terms[term] = 1;
             }
         });
-        return terms;
+
+        var tags = {};
+        tagFields.forEach(function(tagField) {
+            tags[item[tagField]] = 1;
+        });
+        return {'terms': terms, 'tags': tags};
     });
     var result = {};
 
@@ -29,15 +32,20 @@ function filtrate(collection, fields, tagFields) {
         if (ifNoMatch === undefined) {
             ifNoMatch = function() {};
         }
-        var terms = normalize(query).concat(tags);
-        index.forEach(function(termsPresent, index) {
-            var isMatch = (terms === []) || terms.every(function (term) {
-                return (term.length === 0) || (term in termsPresent);
+        var terms = normalize(query);
+        index.forEach(function(indexEntry, i) {
+            var isMatch = (terms.length === 0) || terms.every(function (term) {
+                return (term.length === 0) || (term in indexEntry.terms);
             });
-            if (isMatch) {
-                ifMatch(collection[index]);
+            var hasTagMatch = (tags.length === 0) || tags.some(function(tag) {
+                return (tag in indexEntry.tags);
+            });
+            /*console.log("q(" + query + ")  i(" + JSON.stringify(indexEntry.terms) +
+                        "): " + isMatch);*/
+            if (isMatch && hasTagMatch) {
+                ifMatch(collection[i]);
             } else {
-                ifNoMatch(collection[index]);
+                ifNoMatch(collection[i]);
             }
         });
     };

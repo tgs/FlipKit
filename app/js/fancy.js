@@ -1,12 +1,12 @@
 var mousetrap = require('mousetrap');
 var UAParser = require('ua-parser-js');
 var $ = require('jquery');
-var stemmer = require('porter-stemmer').stemmer;
 var keybindings = require('./keybindings');
 var imageList = require('./imageList.json');
 var overlay = require('./overlay');
 var closeness = require('./closeness');
 var GoogleMapsLoader = require('google-maps'); // only for common js environments 
+var filtrate = require('./filtrate');
  
 
 
@@ -67,7 +67,6 @@ function initialize(google) {
     svo.m_initMap();
 
     var svService = new google.maps.StreetViewService();
-    addSearchTerms(imageList);
 
     var imageCategories = {};
 
@@ -209,6 +208,8 @@ function initialize(google) {
         }
     };
 
+    var markerFilter = filtrate.filtrate(imageList, ['TITLE'], ['Tag 1', 'Tag 2']);
+
     var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
     var filterSearch = $("input#title-search");
 
@@ -217,13 +218,20 @@ function initialize(google) {
         var selected = filterChecks.filter(':checked')
             .map(function() { return this.value; })
             .toArray();
-        updateFilteredMarkers(selected, search);
+
+        markerFilter.find(
+            search, selected,
+            function onMatch(image) {
+                markerIndex[image.imageID].setMap(svo.map);
+            },
+            function onNoMatch(image) {
+                markerIndex[image.imageID].setMap(null);
+            });
     }
 
     filterChecks.on('change', callUpdate);
     filterSearch.on('change', callUpdate);
     filterChecks.first().trigger('change');
-
 }
 
 $.fn.filterCheckBoxes = function(categories, options) {
@@ -282,51 +290,6 @@ function updateOverlayImageInfo(svo, image) {
     svo.spitch = image.pitch;
     svo.m_calcImagePoint()
     svo.m_setImage(image.image_url, image['CAT Record URL']);
-}
-
-
-function updateFilteredMarkers(enabledCategories, searchbox) {
-    var terms = tokenize(searchbox).map(function(item) { return stemmer(item); });
-    $.each(imageList, function(i, image) {
-        var imgid = image.imageID;
-
-        var catEnabled = (
-            $.inArray(image['Tag 1'], enabledCategories) > -1 ||
-            $.inArray(image['Tag 2'], enabledCategories) > -1);
-        var textMatches = (terms === []) || terms.some(function (term) {
-            return (term.length === 0) || (term in image.terms);
-        });
-        if (catEnabled && textMatches) {
-            if (null === markerIndex[imgid].getMap()) {
-                markerIndex[imgid].setMap(svo.map);
-            }
-        } else {
-            markerIndex[imgid].setMap(null);
-        }
-    });
-}
-
-
-function tokenize(str) {
-    return str.toLowerCase().split(/\s/);
-}
-// TODO:
-//   I -> eye (I street)
-//   more stopwords
-var stopwords = {
-    'a': 1,
-    'the': 1
-};
-
-function addSearchTerms(imageList) {
-    $.each(imageList, function(i, image) {
-        image.terms = {};
-        $.each(tokenize(image.TITLE), function(j, word) {
-            if (! stopwords.hasOwnProperty(word)) {
-                image.terms[stemmer(word)] = 1;
-            }
-        });
-    });
 }
 
 module.exports = { 'initialize': initialize };
