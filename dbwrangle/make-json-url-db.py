@@ -22,6 +22,7 @@ INTERESTING_COLUMNS = [
     'OBJECTID',
     'imageID',
     'TITLE',
+    'STERMS',
     'MAPS URL',  # Rows missing this column will be skipped.
     'Notes',
     'CAT Record URL',

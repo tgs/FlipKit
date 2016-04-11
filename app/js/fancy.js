@@ -208,7 +208,9 @@ function initialize(google) {
         }
     };
 
-    var markerFilter = filtrate.filtrate(imageList, ['TITLE'], ['Tag 1', 'Tag 2']);
+    var markerFilter = filtrate.filtrate(imageList,
+                                         ['TITLE', 'STERMS'],
+                                         ['Tag 1', 'Tag 2']);
 
     var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
     var filterSearch = $("input#title-search");
