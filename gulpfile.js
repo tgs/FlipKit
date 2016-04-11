@@ -64,13 +64,13 @@ gulp.task('watch', function(){
 });
 
 gulp.task('distJs', ['browserify'], function(){
-    return gulp.src('dist/index.js')
+    return gulp.src('build/index.js')
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('distHtml', ['copyHtml'], function() {
-    return gulp.src('dist/index.html')
+    return gulp.src('build/index.html')
         .pipe(gulp.dest('dist'));
 });
 

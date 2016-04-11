@@ -9,12 +9,10 @@ var GoogleMapsLoader = require('google-maps'); // only for common js environment
 var filtrate = require('./filtrate');
  
 
-
-//var imageList = imageListContainer.imageList;
 var svo = null;
 var markerIndex = {};
 
-var useAdjustmentMode = true;
+var useAdjustmentMode = false;
 
 var eid = overlay.eid;
 
@@ -218,6 +216,7 @@ function initialize(google) {
 
     var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
     var filterSearch = $("input#title-search");
+    var filterSearchButton = $("#title-search-submit");
 
     function callUpdate() {
         var search = filterSearch.val();
@@ -237,6 +236,7 @@ function initialize(google) {
 
     filterChecks.on('change', callUpdate);
     filterSearch.on('change', callUpdate);
+    filterSearchButton.on('keypress click', callUpdate);
     filterChecks.first().trigger('change');
 }
 
