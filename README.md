@@ -102,7 +102,7 @@ source code, and then use NPM to install the development tools and some
 required libraries:
 
 ```bash
-$ git clone git+ssh://TODO FIXME
+$ git clone git@github.com:tgs/FlipKit.git
 ....
 $ cd flipkit
 $ npm install .
@@ -121,7 +121,7 @@ $ node_modules/.bin/gulp
 [19:48:08] Finished 'default' after 7.5 μs
 ```
 
-Now, the `dist` directory should contain the complete web site.  In
+Now, the `build` directory should contain the complete web site.  In
 order to use the Google Maps API, you will need to run a web server
 here.  If you have Python installed, you can use `python2 -m
 SimpleHTTPServer` or `python3 -m http.server`.  Otherwise, Node
