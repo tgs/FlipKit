@@ -1,0 +1,10 @@
+TODO FOR ME:
+* Make the site behave gracefully if some data's missing!  E.g. tags,
+  labels.  Maybe concat tags 1 & 2 in python.
+* Include an API key that's just OK for localhost
+* Remove dependencies on 'WY 1234' format from JS files, only deal in
+  imageID strings.  May need to pre-process my csv file so that the
+  site code can be more generic.
+* Maybe I should rewrite the url parser in parsimmon (or regex :( )
+* Talk about zoom levels vs distance??
+
