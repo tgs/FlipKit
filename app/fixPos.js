@@ -2,7 +2,7 @@ var GoogleMapsLoader = require('google-maps');
 var imageList = require('./js/imageList.json');
 var $ = require('jquery');
 
-GoogleMapsLoader.KEY = 'AIzaSyBW5fOTQL8BghdonzHVNdb1fFObndyFGpk';
+GoogleMapsLoader.KEY = process.env.MAPS_API_KEY || '';
 GoogleMapsLoader.LIBRARIES = ['geometry'];
 
 function eid(id)

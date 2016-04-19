@@ -6,6 +6,7 @@
   "dependencies": {
     "browserify": "^13.0.0",
     "browserify-data": "^0.2.0",
+    "envify": "^3.4.0",
     "google-maps": "^3.2.1",
     "gulp": "^3.9.1",
     "gulp-buffer": "0.0.2",

@@ -5,6 +5,7 @@ var browserify = require('browserify');
 var browserifyData = require('browserify-data');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
+var envify = require('envify/custom');
 var buffer = require('vinyl-buffer');
 var spawn = require('child_process').spawn,
     gutil = require('gulp-util');
@@ -30,6 +31,8 @@ gulp.task('casper', function () {
 
 gulp.task('browserify', function() {
     return browserify()
+        .transform(envify())
+        .transform(envify({'_': 'purge'}))
         .transform(browserifyData)
         .add('./app/index.js')
         .bundle()
