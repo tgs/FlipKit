@@ -1,28 +1,35 @@
+gulp := node_modules/.bin/gulp
 
-IMAGES = img/*.png
-JS_SOURCES = js/*.js
-JS_MAIN = app.js
-JS = $(JS_SOURCES) $(JS_MAIN)
-JS_INSTALLED = dist/$(JS_MAIN) dist/js/require.js
+default: all
 
-dist/index.html: index.html $(JS_INSTALLED)
-	mkdir -p dist
-	cp index.html dist/
+$(gulp): package.json
+	npm install .
 
-dist/$(JS_MAIN): $(JS)
-	node_modules/.bin/r.js -o mainConfigFile=app.js name=fancy out=dist/$(JS_MAIN)
+dist:
+	mkdir dist
+	cd dist && \
+		ln -s ../img img && \
+		ln -s ../collection collection && \
+		ln -s ../css css && \
+		ln -s ../fonts fonts
 
-dist/js/require.js: js/require.js
-	mkdir -p dist/js
-	cp js/require.js dist/js/
+build:
+	mkdir build
+	cd build && \
+		ln -s ../img img && \
+		ln -s ../collection collection && \
+		ln -s ../css css && \
+		ln -s ../fonts fonts
 
-js/imageList.js: dbwrangle/locations.json fresh-dbwrangle
-	(echo -n 'define({ imageList: '; cat dbwrangle/locations.json; echo '});') > js/imageList.js
+build/index.html build/index.js: app/index.html app/index.js app/js/*.js fresh-dbwrangle build
+	$(gulp)
 
 fresh-dbwrangle:
 	make -C dbwrangle
 
 clean:
-	rm -rf dist
+	rm -rf dist build
+
+all: build build/index.html
 
 .PHONY: clean fresh-dbwrangle
