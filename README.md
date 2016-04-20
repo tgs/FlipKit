@@ -1,8 +1,12 @@
+The code behind [map.wymersdc.com](http://map.wymersdc.com/).  You can learn about the
+data set and the project over [here](http://www.wymersdc.com/).
+
 # FlipKit Development Guide
 
 *Written by Thomas Smith*
 
-Part of the goal of the Wymer's DC project is to make components that
+Part of the goal of the [Wymer's DC](http://www.wymersdc.com/) project is
+to make components that
 can be re-used by other groups to make similar web sites.  This document
 will help to guide such an effort.
 
