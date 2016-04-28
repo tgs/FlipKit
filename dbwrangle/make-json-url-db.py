@@ -135,7 +135,9 @@ def fix_image_location(row):
     fix = FIXES.get(row['imageID'], None)
     if fix:
         if fix['found']:
-            assert fix['pano'] == row['pano'], "think harder before updating pano IDs pls"
+            if fix['pano'] != row['pano']:
+                print("I AM CONFUSED about", row['imageID'])
+                return
             row.update(fix['latLng'])  # Set lat and lng
             if fix['distance'] > 5:
                 print('Updated position of', row['imageID'], 'by', fix['distance'])
