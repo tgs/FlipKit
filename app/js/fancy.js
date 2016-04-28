@@ -7,12 +7,13 @@ var overlay = require('./overlay');
 var closeness = require('./closeness');
 var GoogleMapsLoader = require('google-maps'); // only for common js environments 
 var filtrate = require('./filtrate');
+var querystring = require('./querystring');
  
 
 var svo = null;
 var markerIndex = {};
 
-var useAdjustmentMode = false;
+var useAdjustmentMode = ! (querystring('adjust') || '0').startsWith('0');
 
 var eid = overlay.eid;
 
