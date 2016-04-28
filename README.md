@@ -1,6 +1,6 @@
 # FlipKit Development Guide
 
-*Written by Thomas Smith*
+*by Thomas Smith*
 
 Part of the goal of the Wymer's DC project is to make components that
 can be re-used by other groups to make similar web sites.  This document
