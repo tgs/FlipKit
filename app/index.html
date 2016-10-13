@@ -28,6 +28,9 @@
         border-right: solid thin grey;
         border-bottom: solid thin grey;
       }
+      #image-info-text {
+        color: #fff;
+      }
       html, body {
         height: 100%;
         margin: 0;
@@ -107,6 +110,9 @@
       div#markerInfo {
         display: none;
       }
+      #marker {
+        pointer-events: none;
+      }
       div.wymercontrol {
         margin-top: 10px;
         margin-left: 10px;
@@ -178,6 +184,8 @@
     </div>
     <div id="pano">
       <div class="wymercontrol wymerpanocontrol" id="image-info">
+        <a href="#" target="_blank" id="image-info-text"
+          title="Open catalog entry in a new tab"></a>
       </div>
       <div class="wymercontrol" id="flip-button">
         <span class="flip">Flip</span><br>

@@ -1,14 +1,24 @@
 var metersPerDegreeLng = 85394;  // at 40 degrees north
 var metersPerDegreeLat = 111035;
+var epsilon = 0.1;  // choose img this much farther away, if it's preferred
 
 // For simplicity and speed, I'll see if a point is in a rectangle-ish thing
 // rather than exactly within 10 meters.
 
-function findClosePoint(queryPoint, points, metersRadius) {
+function findClosePoint(queryPoint, points, metersRadius, preferID) {
     // return the closest point, if any is within the radius.
     var closePoints = findPointsWithin(queryPoint, points, metersRadius);
     var closest = closePoints.reduce(function(best, pt) {
-        if (best === null || pt.dist < best.dist) {
+        if (best === null) {
+           return pt;
+        }
+        if (pt.dist <= (best.dist + epsilon)) {
+            // if both are very close, and we have a preferID, override and
+            // choose the preferred.
+            if (preferID && (Math.abs(pt.dist - best.dist) < epsilon) &&
+                (best.point.imageID === preferID)) {
+                    return best;
+            }
             return pt;
         }
         return best;

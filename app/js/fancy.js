@@ -42,8 +42,10 @@ function updateShareButtons() {
 }
 
 
-function updateImageInfo(info) {
-    $('#image-info').text(info);
+function updateImageInfo(image) {
+    $('#image-info-text')
+        .text(image.TITLE)
+        .attr('href', image['CAT Record URL']);
 }
 
 
@@ -102,7 +104,7 @@ function initialize(google) {
                     svo.m_toggleVisible(true);
                     updateFlipButton();
                     updateShareButtons();
-                    updateImageInfo(image.TITLE);
+                    updateImageInfo(image);
                 } else {
                     console.log("Failed a try to get pano data");
                     if (giveUpNextTime) {
@@ -142,14 +144,17 @@ function initialize(google) {
     google.maps.event.addListener(svo.pan, 'position_changed', function ()
     {
         var newPos = svo.pan.getPosition(),
-            location = {lat: newPos.lat(), lng: newPos.lng()};
+            newLatLng = {lat: newPos.lat(), lng: newPos.lng()};
         svo.map.setCenter(newPos);
 
+        // Add markers to the street view that are within a certain number of
+        // meters from here
         updateImageSpots(
-            closeness.findPointsWithin(location, imageList, 100));
+            closeness.findPointsWithin(newLatLng, imageList, 100));
 
         // TODO: reuse the list of close points we got earlier
-        var imageToShow = closeness.findClosePoint(location , imageList, 10);
+        var imageToShow = closeness.findClosePoint(newLatLng, imageList, 10,
+                                                   location.hash.slice(1));
         if (imageToShow === null) {
             svo.m_setImage(null, null);
             svo.m_toggleVisible(false);
