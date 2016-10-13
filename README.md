@@ -163,6 +163,9 @@ spreadsheet should get converted into a file called `locations.json`.
 If you copy this file to `js/imageList.json` and run the `gulp` command
 again, the web site should get built with your images!
 
+Run `gulp dist` to minify the javascript and place `index.*` in the dist/
+directory.
+
 It is very likely that you will need to edit
 `dbwrangle/make-json-url-db.py` at some point - it is the most direct
 interface with the spreadsheet/database.  Your data format will probably

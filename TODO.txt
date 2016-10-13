@@ -8,3 +8,8 @@ TODO FOR ME:
 * Maybe I should rewrite the url parser in parsimmon (or regex :( )
 * Talk about zoom levels vs distance??
 
+PERFORMANCE:
+* The Porter stemming takes a really long time (>300ms).  Maybe I should do it
+  server-side?  That would make the download significantly bigger, 
+* Also there are lots of paint events.  Maybe we could leave the things unpainted
+  until the 'load' event?
