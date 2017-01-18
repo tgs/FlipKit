@@ -191,13 +191,19 @@ SVO.prototype.m_updateMarker = function ()
         this.sheading = google.maps.geometry.spherical.computeHeading(this.streetPt, this.pt)
         this.distance = google.maps.geometry.spherical.computeDistanceBetween(this.streetPt, this.pt);
 
-        // TODO: what do I do about images with very different aspect ratios?
+        // Find the center of the image
         var l_pixelPoint = this.m_convertPointProjection(l_pov, l_adjustedZoom);
-        var imageArcGuess = 35 / 2;
+
+        // Find the left edge of the image
+        var imageArcGuess = 35;  // My guess at the field of view of Wymer's camera
         var edgePixelPoint = this.m_convertPointProjection(
-            {zoom: l_pov.zoom, heading: l_pov.heading - imageArcGuess, pitch: l_pov.pitch},
+            {
+                zoom: l_pov.zoom,
+                heading: l_pov.heading - (imageArcGuess / 2),
+                pitch: l_pov.pitch
+            },
             l_adjustedZoom);
-        // Hope it handles wraparound nicely!
+
         var markerWidth = 2 * (edgePixelPoint.x - l_pixelPoint.x),
             markerHeight = markerWidth * ( this.realImageHeight / this.realImageWidth );
 
@@ -207,28 +213,21 @@ SVO.prototype.m_updateMarker = function ()
         var l_distanceScale = 50 / this.distance;
         l_adjustedZoom = l_adjustedZoom * l_distanceScale;
 
-        // _TODO scale marker according to distance from view point to marker 
-        // beyond maximum range a marker will not be visible
-
         // apply position and size to the marker div
+        // Does zoom get applied twice??
         var wd = markerWidth * l_adjustedZoom;
         var ht = markerHeight * l_adjustedZoom;
 
         var x = l_pixelPoint.x - Math.floor(wd / 2);
         var y = l_pixelPoint.y - Math.floor(ht / 2);
 
-        //l_markerDiv.style.display = "block";
         l_markerDiv.style.left = x + "px";
         l_markerDiv.style.top = y + "px";
         l_markerDiv.style.width = wd + "px";
         l_markerDiv.style.height = ht + "px";
 
 
-        // hide marker when its beyond the maximum distance
-        //l_markerDiv.style.display = this.distance < this.maximumDistance ? "block" : "none";
-        // glog("distance = " + Math.floor(this.distance) + " m (" + l_markerDiv.style.display + ") distance scale = " + l_distanceScale + " l_adjustedZoom = " + l_adjustedZoom);
-
-        // Update a debugging display
+        // Update a debugging display (edit css in index.html to see it)
         eid("markerInfo").innerHTML = "lat: " + formatFloat(this.streetPt.lat(), 6) + " lng: " + formatFloat(this.streetPt.lng(), 6) + " distance: " + Math.floor(this.distance) + " m";
     }
 }
