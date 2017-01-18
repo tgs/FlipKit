@@ -11,32 +11,29 @@ var $ = require('jquery');
 // Licensed under the Apache License http://www.apache.org/licenses/LICENSE-2.0
 function SVO()
 {
-    this.slat = 38.9897227;
-    this.slng = -77.0398903;
+    // This object gets initialized before we've decided what image we are
+    // going to show, so here is some dummy data.  Ignore all the actual values.
+    // TODO: come up with a better lifecycle and remove this.
 
     // initial POV
+    this.streetPt = new google.maps.LatLng(38.9897227, -77.0398903);
     this.sheading = 356.92;
     this.spitch = -2;
-    this.szoom = 1;
-
-    // The image is placed at a point in space, which is this many meters
-    // away from the *initial* street point, in the 'sheading' direction.
     this.imageDistance = 40;
+
+    // Set this.pt, the position in space of the overlay image, by finding the
+    // point on the earth that is imageDistance meters away from streetPt in
+    // the sheading direction.
+    this.m_calcImagePoint();
+
     this.defaultImage = "img/nothing.png";  // a clear pixel
     this.image = this.defaultImage;
 
-    this.streetPt = new google.maps.LatLng(this.slat, this.slng);
-    this.m_calcImagePoint();
-    this.zoom = 13;
-
-    // distance in metres from street view to marker - this is recalculated when
-    // the user moves around.
+    // distance in metres from the *current* street view position to marker -
+    // this is recalculated when the user moves around.  This mainly affects
+    // the size of the image.
     this.distance = 0;
     this.maximumDistance = 200;     // distance beyond which marker is hidden
-
-    // dimensions of street view container (fixed)
-    //this.panWidth = 480;
-    //this.panHeight = 480;
 
     // dimensions of marker container (resized according to current pov)
     this.initMarkerWidth = 360;
@@ -71,7 +68,7 @@ SVO.prototype.m_initMap = function ()
     var mapOptions =
     {
         center: this.pt,
-        zoom: this.zoom,
+        zoom: 13, // default zoom level, gets replaced
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         scaleControl: true,
         mapTypeControl: false
@@ -95,14 +92,6 @@ SVO.prototype.m_initPanorama = function ()
         addressControl: false,
         //clickToGo: false
     };
-
-    //l_panOptions.position = this.streetPt;
-    //l_panOptions.pov =
-    //{
-        //heading: this.sheading,
-        //pitch: this.spitch,
-        //zoom: this.szoom
-    //};
 
     pan = new google.maps.StreetViewPanorama(l_panDiv, l_panOptions);
 
@@ -153,7 +142,7 @@ SVO.prototype.m_convertPointProjection = function (p_pov, p_zoom)
     return l_point;
 }
 
-// public: create the 'marker' (a div containing an image which can be clicked)
+// public: create the 'marker' (the overlay image)
 SVO.prototype.m_initMarker = function ()
 {
     var l_markerDiv = eid("marker");
