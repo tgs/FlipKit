@@ -49,6 +49,11 @@ function SVO()
 }
 
 
+// See the updateOverlayImageInfo function in fancy.js - this method is called
+// after streetPt, sheading, and imageDistance have been set.
+//
+// TODO: This is a bad interface, fix it to take those as parameters instead of
+// another piece of code reaching in and touching all these instance variables.
 SVO.prototype.m_calcImagePoint = function()
 {
     this.pt = google.maps.geometry.spherical.computeOffset(
@@ -58,7 +63,7 @@ SVO.prototype.m_calcImagePoint = function()
     this.lng = this.pt.lng();
 }
 
-// create map
+// public: create map
 SVO.prototype.m_initMap = function ()
 {
     var mapDiv = eid("map");
@@ -76,7 +81,7 @@ SVO.prototype.m_initMap = function ()
 }
 
 
-// create street view
+// public: create street view
 SVO.prototype.m_initPanorama = function ()
 {
     var visible = false;
@@ -121,18 +126,6 @@ SVO.prototype.m_initPanorama = function ()
 }
 
 
-
-
-function Marker(p_name, p_icon, p)
-{
-    this.m_icon = "";
-
-    this.pt = null;
-    this.m_pov = null;
-
-    this.m_pixelpt = null;
-}
-
 // convert the current heading and pitch (degrees) into pixel coordinates
 SVO.prototype.m_convertPointProjection = function (p_pov, p_zoom)
 {
@@ -160,7 +153,7 @@ SVO.prototype.m_convertPointProjection = function (p_pov, p_zoom)
     return l_point;
 }
 
-// create the 'marker' (a div containing an image which can be clicked)
+// public: create the 'marker' (a div containing an image which can be clicked)
 SVO.prototype.m_initMarker = function ()
 {
     var l_markerDiv = eid("marker");
@@ -172,11 +165,13 @@ SVO.prototype.m_initMarker = function ()
     this.m_updateMarker();
 }
 
+// public: toggle whether the overlaid image is visible.
 SVO.prototype.m_toggleVisible = function(visible)
 {
     $('#marker').toggle(visible);
 }
 
+// public: set the overlaid image (and its link href)
 SVO.prototype.m_setImage = function(image, infoUrl)
 {
     if (image === null) {
@@ -189,7 +184,9 @@ SVO.prototype.m_setImage = function(image, infoUrl)
     l_iconDiv.innerHTML = "<a target='_blank' href='" + infoUrl + "'><img src='" + this.image + "' width='100%' height='100%' alt='' /></a>";
 }
 
-
+// public: after a bunch of instance variables get updated by fancy.js, this
+// method gets called to calculate the new position of the "marker" (the
+// overlaid image).
 SVO.prototype.m_updateMarker = function ()
 {
     var l_pov = pan.getPov();
@@ -242,16 +239,9 @@ SVO.prototype.m_updateMarker = function ()
         //l_markerDiv.style.display = this.distance < this.maximumDistance ? "block" : "none";
         // glog("distance = " + Math.floor(this.distance) + " m (" + l_markerDiv.style.display + ") distance scale = " + l_distanceScale + " l_adjustedZoom = " + l_adjustedZoom);
 
+        // Update a debugging display
         eid("markerInfo").innerHTML = "lat: " + formatFloat(this.streetPt.lat(), 6) + " lng: " + formatFloat(this.streetPt.lng(), 6) + " distance: " + Math.floor(this.distance) + " m";
     }
-}
-
-function loadPage()
-{
-    svo = new SVO();
-    svo.m_initMap();
-    svo.m_initPanorama();
-    svo.m_initMarker();
 }
 
 
