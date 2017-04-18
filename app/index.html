@@ -18,6 +18,45 @@
 
     <title>Map - Wymer's DC</title>
     <style>
+      #metanav, #metanav div.tab {
+        background: #008264;
+      }
+      #metanav, #nav, div.tab {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+      }
+      #nav {
+        justify-content: center;
+        flex-direction: row;
+      }
+      #metanav {
+        width: 100%;
+        height: 12%;
+        max-height: 3em;
+        justify-content: center;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      #metanav>div {
+        flex: 1 1 auto;
+      }
+      #metanav a {
+        color: #fff;
+        text-decoration: none;
+      }
+      #metanav a:hover {
+        text-decoration: underline;
+      }
+      div.tab {
+        padding: 0.2em;
+        border: solid thin white;
+        flex: 1 1 auto;
+        justify-content: center;
+        align-items: center;
+      }
+
       #image-info {
         width: 14em;
         min-height: 49px;
@@ -151,13 +190,9 @@
         font-size: 110%;
         font-weight: bold;
       }
-      #wymerlink {
-        line-height: 35px;
-        width: 15em;
-        height: 35px;
-      }
       #wymerlink img {
         height: 35px;
+        vertical-align: middle;
       }
       .flip {
         font-weight: bold;
@@ -166,8 +201,14 @@
     </style>
     </head>
   <body>
-    <div class="wymercontrol wymermapcontrol" id="wymerlink" style="position: absolute; right: -100000px;">
-      <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
+    <div id="metanav">
+      <div class="tab" id="wymerlink">
+        <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
+      </div>
+      <div id="nav">
+        <div class="tab"><a href="#">FILTER</a></div>
+        <div class="tab"><a href="#">SEARCH</a></div>
+      </div>
     </div>
     <div class="wymercontrol wymermapcontrol" id="filtertags">
       <label class="title" for="title-search">
