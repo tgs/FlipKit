@@ -217,24 +217,13 @@
   <body class="has-rows">
   <div style="display: none;">
     <div id="markerInfo"></div>
-    <div class="wymercontrol wymermapcontrol" id="filtertags" style="display: none;">
-      <label class="title" for="title-search">
-      Search Descriptions
-      </label>
-      <p class="search">
-      <input id="title-search"></input><button
-	     id="title-search-submit" style="margin-bottom: 2px;"
-	     type="button" class="btn btn-primary btn-xs">&rarr;</button></p>
-      <p class="title">
-      Filter Images
-    </p></div>
   </div>
     <div id="metanav" class="has-columns row">
       <div class="column tab has-rows" id="wymerlink">
         <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
       </div>
       <div id="nav" class="column has-columns">
-        <div class="column tab has-rows"><a href="#">FILTER</a></div>
+        <div class="column tab has-rows"><a id="nav-filtertags" href="#">FILTER</a></div>
         <div class="column tab has-rows"><a href="#">SEARCH</a></div>
       </div>
     </div>
@@ -266,6 +255,17 @@
           </a>
         </div>
       </div>
+    <div class="column" style="display: none;" id="filtertags">
+      <label class="title" for="title-search">
+      Search Descriptions
+      </label>
+      <p class="search">
+      <input id="title-search"></input><button
+	     id="title-search-submit" style="margin-bottom: 2px;"
+	     type="button" class="btn btn-primary btn-xs">&rarr;</button></p>
+      <p class="title">
+      Filter Images
+    </p></div>
     </div>
     <script src="index.js"></script>
   </body>

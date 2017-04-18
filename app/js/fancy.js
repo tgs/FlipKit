@@ -175,16 +175,14 @@ function initialize(google) {
         document.getElementById('image-info'));
     svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
         document.getElementById('flip-button'));
-    //svo.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        //document.getElementById('wymerlink'));
-    svo.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
-        document.getElementById('filtertags'));
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         document.getElementById('probs'));
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         document.getElementById('cherlinks'));
+
+    $('#nav-filtertags').click(function() {$('#filtertags').toggle();});
 
     if (useAdjustmentMode) {
         var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
