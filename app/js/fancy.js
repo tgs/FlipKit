@@ -174,8 +174,6 @@ function initialize(google) {
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
-        document.getElementById('probs'));
-    svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         document.getElementById('cherlinks'));
 
     $('#nav-filtertags').click(function() {$('#filtertags').toggle();});

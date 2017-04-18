@@ -101,18 +101,6 @@
       div#cherlinks a:hover {
         background: #666;
       }
-      div#probs {
-        padding: 0px;
-        z-index: 999999999;
-        position: relative;
-      }
-      div#probs a {
-        color: #e32;
-      }
-      div#probs:hover #helptext {
-        display: inline;
-        padding: 3px;
-      }
       #helptext {
         display: none;
       }
@@ -204,8 +192,11 @@
         <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
       </div>
       <div id="nav" class="column has-columns">
-        <div class="column tab has-rows"><a id="nav-filtertags" href="#">FILTER</a></div>
-        <div class="column tab has-rows"><a href="#">SEARCH</a></div>
+        <div class="column tab has-rows"><a id="nav-filtertags" href="#">
+            Filter and Search</a></div>
+        <div class="column tab has-rows">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdOdx16MrJ33yv5cgX38Vogd4X6v3jtKGI720qKbgnn5FBvTA/formResponse" rel="noopener" target="_blank">Feedback</a>
+        </div>
       </div>
     </div>
     <div class="has-columns row" id="main-panels">
@@ -226,11 +217,6 @@
             <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
             <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
             <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
-          </div>
-          <div class="wymercontrol wymerpanocontrol" id="probs">
-            <a href="http://www.wymersdc.com/contact/" target="_blank">
-              <span id="helptext">Report image problem</span><span id="exclaim">!</span>
-            </a>
           </div>
         </div>
         <div class="row tab has-rows" id="flip-button">
