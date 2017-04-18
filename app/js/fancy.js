@@ -171,10 +171,6 @@ function initialize(google) {
 
     google.maps.event.trigger(initMarker, "click");
 
-    svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        document.getElementById('image-info'));
-    svo.pan.controls[google.maps.ControlPosition.TOP_LEFT].push(
-        document.getElementById('flip-button'));
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
     svo.pan.controls[google.maps.ControlPosition.RIGHT_TOP].push(

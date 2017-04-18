@@ -18,9 +18,6 @@
 
     <title>Map - Wymer's DC</title>
     <style>
-      #metanav, #metanav div.tab {
-        background: #008264;
-      }
       .has-rows, .has-columns {
         display: -webkit-box;
         display: -ms-flexbox;
@@ -47,32 +44,28 @@
       .has-rows>.row, .has-columns>.column {
         flex: 1 1 auto;
       }
-      #metanav a {
+      #metanav a, .tab a {
         color: #fff;
         text-decoration: none;
       }
-      #metanav a:hover {
+      #metanav a:hover, .tab a:hover {
         text-decoration: underline;
+      }
+      #metanav div.tab {
+        border: solid thin white;
       }
       div.tab {
         padding: 0.2em;
-        border: solid thin white;
         flex: 1 1 auto;
         justify-content: center;
         align-items: center;
+        background: #008264;
       }
 
       #image-info {
-        width: 14em;
         min-height: 49px;
         line-height: 16px;
         overflow: hidden;
-        border-top: solid thin grey;
-        border-left: solid thin grey;
-        border-right: solid thin grey;
-        border-bottom: solid thin grey;
-      }
-      #image-info-text {
         color: #fff;
       }
       html, body {
@@ -80,8 +73,11 @@
         margin: 0;
         padding: 0;
       }
-      #map, #pano {
+      #map, #pano-holder {
         flex: 1 1 50%;
+      }
+      #pano {
+        flex: 10 1 80%;
       }
       #main-panels>div {
         border: thick solid white;
@@ -126,20 +122,6 @@
         display: inline-block;
         width: 31px;
       }
-      div#flip-button {
-        border: thin solid white;
-        cursor: pointer;
-        padding-top: 6px;
-        padding-bottom: 6px;
-        height: 49px;
-        color: #fff;
-        line-height: 20px;
-        font-size: 120%;
-        background-color: #222;
-        opacity: 0.8;
-        border-radius: 2px;
-        width: 12em;
-      }
       div#wymercopyright {
         font-size: 80%;
         padding: 0px;
@@ -148,9 +130,6 @@
       div#wymercopyright a:visited { color: #fff; }
       div#wymercopyright a:hover { color: #fff; }
 
-      div#flip-button:hover {
-        text-decoration: underline;
-      }
       div#markerInfo {
         display: none;
       }
@@ -231,30 +210,32 @@
     </div>
     <div class="has-columns row" id="main-panels">
       <div class="column" id="map"></div>
-      <div class="column" id="pano">
-        <div class="wymercontrol wymerpanocontrol" id="image-info">
+      <div class="column has-rows" id="pano-holder">
+        <div class="row tab has-rows" id="image-info">
           <a href="#" target="_blank" id="image-info-text"
             title="Open catalog entry in a new tab"></a>
         </div>
-        <div class="wymercontrol" id="flip-button">
-          <span class="flip">Flip</span><br>
-          <span id="flip-button-change">between Historic and Modern Views</span>
+        <div id="pano" class="row">
+          <div oncontextmenu="return false;" ondragstart="return false;" id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
+          <div class="wymerpanocontrol" id="wymercopyright">
+            <a href="http://www.dchistory.org/">Historical Images courtesy HSW</a> |
+            Thanks <a href="http://teammaps.com/">Team Maps</a>
+          </div>
+          <div class="wymercontrol wymerpanocontrol" id="cherlinks">
+            <a href="#" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
+            <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
+            <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
+            <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
+          </div>
+          <div class="wymercontrol wymerpanocontrol" id="probs">
+            <a href="http://www.wymersdc.com/contact/" target="_blank">
+              <span id="helptext">Report image problem</span><span id="exclaim">!</span>
+            </a>
+          </div>
         </div>
-        <div oncontextmenu="return false;" ondragstart="return false;" id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
-        <div class="wymerpanocontrol" id="wymercopyright">
-          <a href="http://www.dchistory.org/">Historical Images courtesy HSW</a> |
-          Thanks <a href="http://teammaps.com/">Team Maps</a>
-        </div>
-        <div class="wymercontrol wymerpanocontrol" id="cherlinks">
-          <a href="#" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
-          <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
-          <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
-          <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
-        </div>
-        <div class="wymercontrol wymerpanocontrol" id="probs">
-          <a href="http://www.wymersdc.com/contact/" target="_blank">
-            <span id="helptext">Report image problem</span><span id="exclaim">!</span>
-          </a>
+        <div class="row tab has-rows" id="flip-button">
+          <a href="#">Flip
+            <span id="flip-button-change">between Historic and Modern Views</span></a>
         </div>
       </div>
     <div class="column" style="display: none;" id="filtertags">
