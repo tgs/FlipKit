@@ -21,15 +21,19 @@
       #metanav, #metanav div.tab {
         background: #008264;
       }
-      #metanav, #nav, div.tab {
+      .has-rows, .has-columns {
         display: -webkit-box;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
       }
-      #nav {
+      .has-columns {
         justify-content: center;
         flex-direction: row;
+      }
+      .has-rows {
+        justify-content: center;
+        flex-direction: column;
       }
       #metanav {
         width: 100%;
@@ -38,8 +42,9 @@
         justify-content: center;
         flex-wrap: wrap;
         text-align: center;
+        flex: 0 1 auto;
       }
-      #metanav>div {
+      .has-rows>.row, .has-columns>.column {
         flex: 1 1 auto;
       }
       #metanav a {
@@ -200,14 +205,14 @@
       }
     </style>
     </head>
-  <body>
-    <div id="metanav">
-      <div class="tab" id="wymerlink">
+  <body class="has-rows">
+    <div id="metanav" class="has-columns row">
+      <div class="column tab" id="wymerlink">
         <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
       </div>
-      <div id="nav">
-        <div class="tab"><a href="#">FILTER</a></div>
-        <div class="tab"><a href="#">SEARCH</a></div>
+      <div id="nav" class="column has-columns">
+        <div class="column tab"><a href="#">FILTER</a></div>
+        <div class="column tab"><a href="#">SEARCH</a></div>
       </div>
     </div>
     <div class="wymercontrol wymermapcontrol" id="filtertags">
@@ -221,32 +226,43 @@
       <p class="title">
       Filter Images
     </p></div>
-    <div id="map">
+    <div class="row">
+      ehhh
     </div>
-    <div id="pano">
-      <div class="wymercontrol wymerpanocontrol" id="image-info">
-        <a href="#" target="_blank" id="image-info-text"
-          title="Open catalog entry in a new tab"></a>
+    <div class="row">
+      ehhh
+    </div>
+    <div class="row">
+      ehhh
+    </div>
+    <div class="row" id="main-panels">
+      <div id="map">
       </div>
-      <div class="wymercontrol" id="flip-button">
-        <span class="flip">Flip</span><br>
-        <span id="flip-button-change">between Historic and Modern Views</span>
-      </div>
-      <div oncontextmenu="return false;" ondragstart="return false;" id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
-      <div class="wymerpanocontrol" id="wymercopyright">
-        <a href="http://www.dchistory.org/">Historical Images courtesy HSW</a> |
-        Thanks <a href="http://teammaps.com/">Team Maps</a>
-      </div>
-      <div class="wymercontrol wymerpanocontrol" id="cherlinks">
-        <a href="#" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
-        <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
-        <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
-        <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
-      </div>
-      <div class="wymercontrol wymerpanocontrol" id="probs">
-        <a href="http://www.wymersdc.com/contact/" target="_blank">
-          <span id="helptext">Report image problem</span><span id="exclaim">!</span>
-        </a>
+      <div id="pano">
+        <div class="wymercontrol wymerpanocontrol" id="image-info">
+          <a href="#" target="_blank" id="image-info-text"
+            title="Open catalog entry in a new tab"></a>
+        </div>
+        <div class="wymercontrol" id="flip-button">
+          <span class="flip">Flip</span><br>
+          <span id="flip-button-change">between Historic and Modern Views</span>
+        </div>
+        <div oncontextmenu="return false;" ondragstart="return false;" id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
+        <div class="wymerpanocontrol" id="wymercopyright">
+          <a href="http://www.dchistory.org/">Historical Images courtesy HSW</a> |
+          Thanks <a href="http://teammaps.com/">Team Maps</a>
+        </div>
+        <div class="wymercontrol wymerpanocontrol" id="cherlinks">
+          <a href="#" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
+          <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
+          <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
+          <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
+        </div>
+        <div class="wymercontrol wymerpanocontrol" id="probs">
+          <a href="http://www.wymersdc.com/contact/" target="_blank">
+            <span id="helptext">Report image problem</span><span id="exclaim">!</span>
+          </a>
+        </div>
       </div>
     </div>
     <div id="markerInfo"></div>
