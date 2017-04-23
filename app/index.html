@@ -44,17 +44,21 @@
       .has-rows>.row, .has-columns>.column {
         flex: 1 1 auto;
       }
-      #metanav a, .tab a {
+      #metanav a, a.tab {
         color: #fff;
         text-decoration: none;
       }
-      #metanav a:hover, .tab a:hover {
+      #metanav a:hover, a.tab:hover {
         text-decoration: underline;
       }
-      #metanav div.tab {
+      #metanav .tab {
         border: solid thin white;
+        font-size: 130%;
       }
-      div.tab {
+      #flip-button {
+        font-size: 140%;
+      }
+      .tab {
         padding: 0.2em;
         flex: 1 1 auto;
         justify-content: center;
@@ -62,7 +66,7 @@
         background: #008264;
       }
 
-      #image-info {
+      #image-info-text {
         min-height: 49px;
         line-height: 16px;
         overflow: hidden;
@@ -72,6 +76,7 @@
         height: 100%;
         margin: 0;
         padding: 0;
+        font-family: "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
       }
       #map, #pano-holder {
         flex: 1 1 50%;
@@ -157,6 +162,12 @@
         font-size: 110%;
         font-weight: bold;
       }
+      #cherlinks {
+        flex: 0.2 0.2 160px;
+      }
+      #cherlinks a:hover {
+        background: rgba(255,255,255,0.3);
+      }
       #wymerlink {
         flex-grow: 0.5;
       }
@@ -175,21 +186,21 @@
     <div id="markerInfo"></div>
   </div>
     <div id="metanav" class="has-columns row">
-      <div class="column tab has-rows" id="wymerlink">
-        <a target="_blank" href="http://www.wymersdc.com/"><img src="WDC.png"> Return to Wymer's DC</a>
-      </div>
+      <a class="column tab has-rows" id="wymerlink" target="_blank"
+        href="http://www.wymersdc.com/">
+        <span><img src="WDC.png">&nbsp;Return to Wymer's DC</span> </a>
       <div id="nav" class="column has-columns">
-        <div class="column tab has-rows"><a id="nav-filtertags" href="#">
-            Filter and Search</a></div>
-        <div class="column tab has-rows">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdOdx16MrJ33yv5cgX38Vogd4X6v3jtKGI720qKbgnn5FBvTA/formResponse" rel="noopener" target="_blank">Feedback</a>
-        </div>
+        <a class="column tab has-rows" id="nav-filtertags" href="#">
+            Filter and Search</a>
+        <a class="column tab has-rows"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSdOdx16MrJ33yv5cgX38Vogd4X6v3jtKGI720qKbgnn5FBvTA/formResponse"
+          rel="noopener" target="_blank">Feedback</a>
         <div class="column tab has-rows" id="cherlinks">
-          <span>
-            <a href="#" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
-            <a href="#" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
-            <a href="#" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
-            <a href="#" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
+          <span class="row has-columns">
+            <a href="#" class="column has-rows" target="_blank" id="e-mail"><img src="img/e-mail.png" title="E-mail a link to this location"></a>
+            <a href="#" class="column has-rows" target="_blank" id="facebook"><img src="img/facebook.png" title="Share this location on Facebook"></a>
+            <a href="#" class="column has-rows" target="_blank" id="reddit"><img src="img/reddit.png" title="Share this location on Reddit"></a>
+            <a href="#" class="column has-rows" target="_blank" id="twitter"><img src="img/twitter.png" title="Tweet this location"></a>
           </span>
         </div>
       </div>
@@ -197,10 +208,8 @@
     <div class="has-columns row" id="main-panels">
       <div class="column" id="map"></div>
       <div class="column has-rows" id="pano-holder">
-        <div class="row tab has-rows" id="image-info">
-          <a href="#" target="_blank" id="image-info-text"
-            title="Open catalog entry in a new tab"></a>
-        </div>
+        <a class="row tab has-rows" href="#" target="_blank" id="image-info-text"
+          title="Open catalog entry in a new tab" rel="noopener"></a>
         <div id="pano" class="row">
           <div oncontextmenu="return false;" ondragstart="return false;" id="marker" style="position: absolute; top:0px;left:0px;z-index:1000"></div>
           <div class="wymerpanocontrol" id="wymercopyright">
@@ -208,10 +217,10 @@
             Thanks <a href="http://teammaps.com/">Team Maps</a>
           </div>
         </div>
-        <div class="row tab has-rows" id="flip-button">
-          <a href="#">Flip
-            <span id="flip-button-change">between Historic and Modern Views</span></a>
-        </div>
+        <a class="row tab has-rows" id="flip-button" href="#">
+          <span>Flip
+            <span id="flip-button-change">
+              between Historic and Modern Views</span></span></a>
       </div>
     <div class="column" style="display: none;" id="filtertags">
       <label class="title" for="title-search">

@@ -91,6 +91,7 @@ SVO.prototype.m_initPanorama = function ()
         //linksControl: false,
         addressControl: false,
         //clickToGo: false
+        fullscreenControl: false
     };
 
     pan = new google.maps.StreetViewPanorama(l_panDiv, l_panOptions);
