@@ -174,7 +174,11 @@ function initialize(google) {
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
 
-    $('#nav-filtertags').click(function() {$('#filtertags').toggle();});
+    $('#nav-filtertags').click(function() {
+        $('#filtertags').toggle();
+        google.maps.event.trigger(svo.map, 'resize');
+        google.maps.event.trigger(svo.pan, 'resize');
+    });
 
     if (useAdjustmentMode) {
         var adjOut = $('<div class="wymercontrol wymermapcontrol" id="adjust-out"></div>')
