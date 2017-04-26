@@ -178,6 +178,7 @@ function initialize(google) {
         $('#' + this.id.substring(4)).toggle();
         google.maps.event.trigger(svo.map, 'resize');
         google.maps.event.trigger(svo.pan, 'resize');
+        return false;
     });
 
     if (useAdjustmentMode) {
