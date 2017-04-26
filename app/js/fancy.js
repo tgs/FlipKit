@@ -174,8 +174,8 @@ function initialize(google) {
     svo.pan.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
         document.getElementById('wymercopyright'));
 
-    $('#nav-filtertags').click(function() {
-        $('#filtertags').toggle();
+    $('#nav-filtertags, #nav-searchtab').click(function() {
+        $('#' + this.id.substring(4)).toggle();
         google.maps.event.trigger(svo.map, 'resize');
         google.maps.event.trigger(svo.pan, 'resize');
     });

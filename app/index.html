@@ -148,6 +148,19 @@
         font-weight: 100;
         margin-bottom: 1px;
       }
+      .search-examples {
+        font-size: 80%;
+        font-style: italic;
+      }
+      ul.search-phrases {
+        font-size: 80%;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #searchtab h4,
+      #searchtab h5 { margin-bottom: 0; }
+      #searchtab p { margin-top: 0; }
       #filtertags {
         text-align: left;
         color: #333;
@@ -191,7 +204,9 @@
         <span><img src="WDC.png">&nbsp;Return to Wymer's DC</span> </a>
       <div id="nav" class="column has-columns">
         <a class="column tab has-rows" id="nav-filtertags" href="#">
-            Filter and Search</a>
+            Filter</a>
+        <a class="column tab has-rows" id="nav-searchtab" href="#">
+            Search</a>
         <a class="column tab has-rows"
           href="https://docs.google.com/forms/d/e/1FAIpQLSdOdx16MrJ33yv5cgX38Vogd4X6v3jtKGI720qKbgnn5FBvTA/formResponse"
           rel="noopener" target="_blank">Feedback</a>
@@ -222,18 +237,40 @@
             <span id="flip-button-change">
               between Historic and Modern Views</span></span></a>
       </div>
-    <div class="column" style="display: none;" id="filtertags">
-      <label class="title" for="title-search">
-      Search Descriptions
-      </label>
+    <div class="column" style="display: none;" id="searchtab">
+      <h4>Filter by Keyword</h4>
       <p class="search">
       <input id="title-search"></input><button
 	     id="title-search-submit" style="margin-bottom: 2px;"
 	     type="button" class="btn btn-primary btn-xs">&rarr;</button></p>
-      <p class="title">
-      Filter Images
-    </p></div>
+     <h5>Search by subject, object, type, proper noun</h5>
+     <p class="search-examples">street cars, baseball, Methodist, Potomac</p>
+     <h5>Recommended unusual phrases...</h5>
+     <ul class="search-phrases">
+       <li>Automobiles</li>
+       <li>Awnings</li>
+       <li>Bridges</li>
+       <li>Chapels</li>
+       <li>Coal Yard</li>
+       <li>Dwellings</li>
+       <li>Embassies</li>
+       <li>Fire hydrants</li>
+       <li>Forts</li>
+       <li>Lampposts</li>
+       <li>Mailboxes</li>
+       <li>Pedestrians</li>
+       <li>Sightseers</li>
+       <li>Street Furnishings</li>
+       <li>Street-railroad tracks</li>
+       <li>Telephone Posts</li>
+       <li>Theaters</li>
+       <li>Unpaved roads</li>
+     </ul>
     </div>
+    <div class="column" style="display: none;" id="filtertags">
+      <p class="title">
+      Filter by Category
+    </p></div>
     <script src="index.js"></script>
   </body>
 </html>
