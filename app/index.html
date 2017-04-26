@@ -64,7 +64,11 @@
         align-items: center;
         background: #008264;
       }
-
+      #main-panels>div.extratab {
+        border: solid thin #008264;
+        margin: 3px;
+        padding: 3px;
+      }
       #image-info-text {
         min-height: 49px;
         line-height: 16px;
@@ -84,7 +88,7 @@
         flex: 10 1 80%;
       }
       #main-panels>div {
-        border: thick solid white;
+        border: 3px solid white;
       }
       div.wymerpanocontrol {
         border: thin solid black;
@@ -171,9 +175,11 @@
       #filtertags .title {
         display: block;
         text-align: center;
-        font-size: 110%;
-        font-weight: bold;
+        font-size: 120%;
       }
+      h4 { font-size: 120%; }
+      h5 { font-size: 110%; }
+      h3, h4, h5, h6 { font-weight: normal; }
       #cherlinks {
         flex: 0.1 0 140px;
       }
@@ -236,7 +242,7 @@
             <span id="flip-button-change">
               between Historic and Modern Views</span></span></a>
       </div>
-    <div class="column" style="display: none;" id="searchtab">
+    <div class="column extratab" style="display: none;" id="searchtab">
       <h4>Filter by Keyword</h4>
       <p class="search">
       <input id="title-search"></input><button
@@ -266,10 +272,46 @@
        <li>Unpaved roads</li>
      </ul>
     </div>
-    <div class="column" style="display: none;" id="filtertags">
+    <div class="column extratab" style="display: none;" id="filtertags">
       <p class="title">
       Filter by Category
+      <!-- the filters get filled in with js -->
     </p></div>
+    <div class="column extratab" style="display: none;" id="about">
+      <h4>About Wymer's DC</h4>
+
+      <p>Wymer’s DC is an independent project created using the <a
+        href="http://historydc.pastperfect-online.com/32595cgi/mweb.exe?request=record;id=AA682BF9-1E7B-4769-A975-545254658540;type=102">John
+        P. Wymer Collection</a> from the <a
+        href="http://www.dchistory.org/">Historical Society of Washington,
+        D.C.</a> The Wymer Collection consists of about 4,000 street
+      photography images of Washington, D.C., taken between 1948 – 1952.</p>
+
+      <p>This project was created as a new way to visualize this invaluable
+      photography collection which shows a glimpse into mid-twentieth century
+      life in the District of Columbia. Combining the standard map view with
+      street view provides an immersive experience for the users both familiar
+      and unfamiliar with the city.</p>
+
+      <p>To learn more about the project, click on the following links from our
+      homepage:<br>
+      <a href="http://www.wymersdc.com/about-the-collection/">About the Wymer Collection</a><br>
+      <a href="http://www.wymersdc.com/john-p-wymer/">John Wymer Biography</a><br>
+      <a href="http://www.wymersdc.com/map-and-area-description/">Wymer’s Map and Area Descriptions</a><br>
+      <a href="http://www.wymersdc.com/rights-and-permissions/">Rights and Permissions</a><br>
+      <a href="http://www.wymersdc.com/volunteer/">Volunteer</a><br>
+      <a href="http://www.wymersdc.com/map-tutorial/">Map Tutorial</a><br>
+      <a href="http://www.wymersdc.com/updates/">Project Updates Blog</a><br>
+      <a href="http://www.wymersdc.com/faqs/">FAQs</a><br>
+      <a href="http://www.wymersdc.com/contact/">Contact</a><br>
+      </p>
+
+      <p>Wymer’s DC was co-created and designed by Jessica Richardson Smith and
+      Thomas Smith (<a href="mailto:WymersDC@gmail.com">WymersDC@gmail.com</a>
+      and <a href="https://twitter.com/WymersDC">@WymersDC</a> on Twitter)
+      using their custom <a href="https://github.com/tgs/FlipKit">FlipKit
+      software</a>.</p>
+      </div>
     <script src="index.js"></script>
   </body>
 </html>
