@@ -166,6 +166,7 @@ rows_out = []
 
 
 for row in rows:
+    row = {col: cell.strip() for col, cell in row.items()}
     try:
         subset_columns(row)
         # For Wymer's DC the image ID is a subset of the OBJECTID column

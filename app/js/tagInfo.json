@@ -26,5 +26,9 @@
     "Parks and Nature Scenes": {
         "title": "PARKS & NATURE SCENES",
         "description": "parks, playgrounds, rural areas, monuments, statues, etc."
+    },
+    "Places of Worship": {
+        "title": "PLACES OF WORSHIP",
+        "description": "churches, synagogues, mosques, fraternal organizations, convents, monasteries, etc."
     }
 }

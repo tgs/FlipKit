@@ -3,6 +3,7 @@ var UAParser = require('ua-parser-js');
 var $ = require('jquery');
 var keybindings = require('./keybindings');
 var imageList = require('./imageList.json');
+var tagInfo = require('./tagInfo.json');
 var overlay = require('./overlay');
 var closeness = require('./closeness');
 var GoogleMapsLoader = require('google-maps'); // only for common js environments 
@@ -215,7 +216,9 @@ function initialize(google) {
                                          ],
                                          ['Tag 1', 'Tag 2']);
 
-    var filterChecks = $("div#filtertags").filterCheckBoxes(Object.keys(imageCategories)).find('input');
+    var filterChecks = $("div#filtertags").filterCheckBoxes(
+        Object.keys(imageCategories)
+    ).find('input');
     var filterSearch = $("input#title-search");
     var filterSearchButton = $("#title-search-submit");
 
@@ -248,7 +251,13 @@ $.fn.filterCheckBoxes = function(categories, options) {
         var input = $('<input type="checkbox" checked>')
         .attr('name', opts.name)
         .attr('value', cat).wrap('<label>').parent();
-        $('<span>').text(cat).appendTo(input);
+        var title = opts.tagInfo[cat] ? opts.tagInfo[cat]['title'] : cat;
+        console.log("'" + cat + "'");
+        console.log(title);
+        $('<span class="tagtitle">').text(title).appendTo(input);
+        if (opts.tagInfo[cat]) {
+            $('<span class="tagdescription">').text(opts.tagInfo[cat]['description']).appendTo(input);
+        }
         return input.wrap('<p>').parent();
     });
     this.append(contents);
@@ -257,6 +266,7 @@ $.fn.filterCheckBoxes = function(categories, options) {
 
 $.fn.filterCheckBoxes.defaults = {
     name: 'filtertags',
+    tagInfo: tagInfo
 };
 
 
