@@ -40,6 +40,9 @@
         text-align: center;
         flex: 0 1 auto;
       }
+      #main-panels {
+        height: 88%;
+      }
       .has-rows>.row, .has-columns>.column {
         flex: 1 1 auto;
       }
@@ -161,23 +164,56 @@
         margin: 0;
         padding: 0;
       }
+      body {
+        max-height: 100%;
+      }
       #searchtab h4,
       #searchtab h5 { margin-bottom: 0; }
       #searchtab p { margin-top: 0; }
+      #searchtab {
+        flex: 1 1 30%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
       #filtertags {
         text-align: left;
         color: #333;
-        font-size: 115%;
+        flex: 1 1 30%;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
       #filtertags input {
         margin-top: 1px;
       }
-      #filtertags .title {
-        display: block;
-        text-align: center;
-        font-size: 120%;
+      #filtertags p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
       }
-      h4 { font-size: 120%; }
+      #filtertags .tagdescription {
+        display: block;
+        font-size: 80%;
+        font-style: italic;
+        margin-left: 1.5em;
+      }
+      #about {
+        flex: 1 1 20%;
+        min-width: 10em;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family: Arial, sans-serif;
+      }
+      #about>p, #about>ul {
+        font-size: 85%;
+      }
+      #about>p {
+        margin: 0.5em;
+        text-indent: 1.5em;
+      }
+      h4 {
+        font-size: 120%;
+        color: #008264;
+        text-align: center;
+      }
       h5 { font-size: 110%; }
       h3, h4, h5, h6 { font-weight: normal; }
       #cherlinks {
@@ -243,7 +279,7 @@
               between Historic and Modern Views</span></span></a>
       </div>
     <div class="column extratab" style="display: none;" id="searchtab">
-      <h4>Filter by Keyword</h4>
+      <h4>Search by Keyword</h4>
       <p class="search">
       <input id="title-search"></input><button
 	     id="title-search-submit" style="margin-bottom: 2px;"
@@ -273,10 +309,9 @@
      </ul>
     </div>
     <div class="column extratab" style="display: none;" id="filtertags">
-      <p class="title">
-      Filter by Category
+      <h4>Filter by Category</h4>
       <!-- the filters get filled in with js -->
-    </p></div>
+    </div>
     <div class="column extratab" style="display: none;" id="about">
       <h4>About Wymer's DC</h4>
 
@@ -294,17 +329,18 @@
       and unfamiliar with the city.</p>
 
       <p>To learn more about the project, click on the following links from our
-      homepage:<br>
-      <a href="http://www.wymersdc.com/about-the-collection/">About the Wymer Collection</a><br>
-      <a href="http://www.wymersdc.com/john-p-wymer/">John Wymer Biography</a><br>
-      <a href="http://www.wymersdc.com/map-and-area-description/">Wymer’s Map and Area Descriptions</a><br>
-      <a href="http://www.wymersdc.com/rights-and-permissions/">Rights and Permissions</a><br>
-      <a href="http://www.wymersdc.com/volunteer/">Volunteer</a><br>
-      <a href="http://www.wymersdc.com/map-tutorial/">Map Tutorial</a><br>
-      <a href="http://www.wymersdc.com/updates/">Project Updates Blog</a><br>
-      <a href="http://www.wymersdc.com/faqs/">FAQs</a><br>
-      <a href="http://www.wymersdc.com/contact/">Contact</a><br>
-      </p>
+      homepage:</p>
+      <ul>
+        <li><a href="http://www.wymersdc.com/about-the-collection/">About the Wymer Collection</a></li>
+        <li><a href="http://www.wymersdc.com/john-p-wymer/">John Wymer Biography</a></li>
+        <li><a href="http://www.wymersdc.com/map-and-area-description/">Wymer’s Map and Area Descriptions</a></li>
+        <li><a href="http://www.wymersdc.com/rights-and-permissions/">Rights and Permissions</a></li>
+        <li><a href="http://www.wymersdc.com/volunteer/">Volunteer</a></li>
+        <li><a href="http://www.wymersdc.com/map-tutorial/">Map Tutorial</a></li>
+        <li><a href="http://www.wymersdc.com/updates/">Project Updates Blog</a></li>
+        <li><a href="http://www.wymersdc.com/faqs/">FAQs</a></li>
+        <li><a href="http://www.wymersdc.com/contact/">Contact</a></li>
+      </ul>
 
       <p>Wymer’s DC was co-created and designed by Jessica Richardson Smith and
       Thomas Smith (<a href="mailto:WymersDC@gmail.com">WymersDC@gmail.com</a>
