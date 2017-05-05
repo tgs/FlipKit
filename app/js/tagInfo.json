@@ -1,0 +1,30 @@
+{
+    "Residential": {
+        "title": "RESIDENTIAL",
+        "description": "houses, apartments, etc."
+    },
+    "Schools / Edu. Centers": {
+        "title": "SCHOOL & EDUCATION CENTERS",
+        "description": "public, private, parochial schools, colleges, universities, learning centers"
+    },
+    "Road Scenes": {
+        "title": "ROAD SCENES",
+        "description": "photographs wherein roads are prominent"
+    },
+    "Commercial": {
+        "title": "COMMERCIAL",
+        "description": "businesses, private offices"
+    },
+    "Government Facilities": {
+        "title": "GOVERNMENT FACILITIES",
+        "description": "federal, municipal buildings, police stations, fire departments, libraries"
+    },
+    "People Scenes": {
+        "title": "PEOPLE SCENES",
+        "description": "photos with people in foreground"
+    },
+    "Parks and Nature Scenes": {
+        "title": "PARKS & NATURE SCENES",
+        "description": "parks, playgrounds, rural areas, monuments, statues, etc."
+    }
+}
