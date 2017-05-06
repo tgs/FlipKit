@@ -221,12 +221,21 @@ function initialize(google) {
     ).find('input');
     var filterSearch = $("input#title-search");
     var filterSearchButton = $("#title-search-submit");
+    var filterClearButton = $("#title-search-clear");
+
+    var searchNav = $("#nav-searchtab");
+    var filterNav = $("#nav-filtertags");
 
     function callUpdate() {
         var search = filterSearch.val();
         var selected = filterChecks.filter(':checked')
             .map(function() { return this.value; })
             .toArray();
+
+        searchNav.toggleClass("nav-activated", !!search);
+        filterNav.toggleClass("nav-activated",
+                              selected.length < filterChecks.length);
+        filterClearButton.toggle(!!search);
 
         markerFilter.find(
             search, selected,
@@ -241,6 +250,9 @@ function initialize(google) {
     filterChecks.on('change', callUpdate);
     filterSearch.on('change', callUpdate);
     filterSearchButton.on('keypress click', callUpdate);
+    filterClearButton.on('keypress click', function() {
+        filterSearch.val('').trigger('change');
+    });
     filterChecks.first().trigger('change');
 }
 

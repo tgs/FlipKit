@@ -184,6 +184,9 @@
         overflow-x: hidden;
         overflow-y: auto;
       }
+      #metanav .nav-activated {
+        background: #3b9f88;
+      }
       #filtertags input {
         margin-top: 1px;
       }
@@ -285,9 +288,12 @@
     <div class="column extratab" style="display: none;" id="searchtab">
       <h4>Search by Keyword</h4>
       <p class="search">
-      <input id="title-search"></input><button
+      <input id="title-search"></input> <button
 	     id="title-search-submit" style="margin-bottom: 2px;"
-	     type="button" class="btn btn-primary btn-xs">&rarr;</button></p>
+	     type="button" class="btn btn-primary btn-xs">Search</button>&nbsp;<button
+       id="title-search-clear" style="display: none; margin-bottom: 2px;"
+       type="button">Clear</button>
+     </p>
      <h5>Search by subject, object, type, proper noun</h5>
      <p class="search-examples">street cars, baseball, Methodist, Potomac</p>
      <h5>Recommended unusual phrases...</h5>
